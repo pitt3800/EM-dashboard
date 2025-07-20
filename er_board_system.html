@@ -1,0 +1,1021 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>응급실 게시판 시스템</title>
+    
+    <!-- 부트스트랩 CSS -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <!-- 아이콘 -->
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <!-- 구글 폰트 -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* ========================================
+           📦 MODULE: 모던 의료진 색상 시스템
+           ======================================== */
+        :root {
+            --primary: #4f46e5;
+            --primary-light: #6366f1;
+            --primary-dark: #3730a3;
+            --secondary: #f8fafc;
+            --accent: #06b6d4;
+            --success: #10b981;
+            --warning: #f59e0b;
+            --danger: #ef4444;
+            --dark: #0f172a;
+            --light: #ffffff;
+            --gray-100: #f1f5f9;
+            --gray-200: #e2e8f0;
+            --gray-300: #cbd5e1;
+            --gray-600: #475569;
+            --gray-700: #334155;
+            --gray-800: #1e293b;
+            --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+            --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1);
+            --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1);
+            --shadow-xl: 0 20px 25px -5px rgb(0 0 0 / 0.1);
+            --border-radius: 12px;
+        }
+
+        body {
+            background: linear-gradient(135deg, var(--secondary) 0%, var(--gray-100) 100%);
+            font-family: 'Inter', 'Malgun Gothic', sans-serif;
+            color: var(--dark);
+            line-height: 1.6;
+        }
+
+        /* ========================================
+           📦 MODULE: 헤더 디자인
+           ======================================== */
+        .er-header {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 50%, var(--accent) 100%);
+            color: white;
+            padding: 3rem 0;
+            box-shadow: var(--shadow-lg);
+            margin-bottom: 2.5rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .er-header::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+            opacity: 0.3;
+        }
+
+        .er-header .container {
+            position: relative;
+            z-index: 1;
+        }
+
+        .er-header h1 {
+            font-size: 2.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .er-header .lead {
+            opacity: 0.95;
+            font-size: 1.2rem;
+            font-weight: 400;
+        }
+
+        /* ========================================
+           📦 MODULE: 모던 카드 디자인
+           ======================================== */
+        .er-card {
+            background: var(--light);
+            border: 1px solid var(--gray-200);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-md);
+            margin-bottom: 2rem;
+            overflow: hidden;
+            transition: all 0.3s ease;
+        }
+
+        .er-card:hover {
+            transform: translateY(-2px);
+            box-shadow: var(--shadow-xl);
+            border-color: var(--primary);
+        }
+
+        .er-card-header {
+            background: linear-gradient(135deg, var(--gray-800) 0%, var(--gray-700) 100%);
+            color: white;
+            padding: 1.5rem 2rem;
+            font-weight: 600;
+            font-size: 1.1rem;
+            border-bottom: none;
+            display: flex;
+            justify-content: between;
+            align-items: center;
+        }
+
+        .er-card-header i {
+            margin-right: 0.75rem;
+            opacity: 0.9;
+            font-size: 1.2rem;
+        }
+
+        /* ========================================
+           📦 MODULE: 공지사항 표시 스타일
+           ======================================== */
+        .notice-item {
+            background: white;
+            border: 2px solid var(--gray-200);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+            box-shadow: var(--shadow-sm);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .notice-item::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            bottom: 0;
+            width: 4px;
+            background: var(--primary);
+        }
+
+        .notice-item:hover {
+            border-color: var(--primary);
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-1px);
+        }
+
+        .notice-department {
+            display: inline-flex;
+            align-items: center;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            box-shadow: var(--shadow-sm);
+        }
+
+        .notice-department i {
+            margin-right: 0.5rem;
+            font-size: 0.8rem;
+        }
+
+        .notice-date {
+            color: var(--gray-600);
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .notice-content {
+            color: var(--dark);
+            line-height: 1.7;
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .notice-etc {
+            color: var(--gray-600);
+            font-style: italic;
+            font-size: 0.9rem;
+            border-top: 1px solid var(--gray-200);
+            padding-top: 1rem;
+            background: var(--gray-100);
+            margin: 1rem -1.5rem -1.5rem -1.5rem;
+            padding: 1rem 1.5rem;
+        }
+
+        /* ========================================
+           📦 MODULE: 버튼 디자인
+           ======================================== */
+        .er-btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 500;
+            text-decoration: none;
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        .er-btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .er-btn-primary:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+            color: white;
+        }
+
+        .er-btn-success {
+            background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+            color: white;
+            box-shadow: var(--shadow-md);
+        }
+
+        .er-btn-success:hover {
+            transform: translateY(-1px);
+            box-shadow: var(--shadow-lg);
+            color: white;
+        }
+
+        .er-btn-outline {
+            background: transparent;
+            border: 2px solid var(--gray-300);
+            color: var(--gray-700);
+        }
+
+        .er-btn-outline:hover {
+            background: var(--gray-100);
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+
+        .er-btn-danger {
+            background: var(--danger);
+            color: white;
+            padding: 0.4rem 0.8rem;
+            font-size: 0.8rem;
+        }
+
+        .er-btn-danger:hover {
+            background: #dc2626;
+            color: white;
+        }
+
+        /* ========================================
+           📦 MODULE: 폼 스타일
+           ======================================== */
+        .er-form-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .er-form-label {
+            font-weight: 500;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+            display: block;
+            font-size: 0.9rem;
+        }
+
+        .er-form-control {
+            border: 2px solid var(--gray-200);
+            border-radius: 8px;
+            padding: 0.75rem 1rem;
+            font-size: 0.95rem;
+            transition: all 0.2s ease;
+            background: white;
+            width: 100%;
+        }
+
+        .er-form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+            outline: none;
+        }
+
+        .er-textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        /* ========================================
+           📦 MODULE: 필터 섹션
+           ======================================== */
+        .filter-section {
+            background: var(--gray-100);
+            border-radius: var(--border-radius);
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            border: 1px solid var(--gray-200);
+        }
+
+        .filter-section h6 {
+            color: var(--dark);
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        /* ========================================
+           📦 MODULE: 알림 메시지
+           ======================================== */
+        .er-alert {
+            padding: 1rem 1.5rem;
+            border-radius: 8px;
+            margin-bottom: 1.5rem;
+            display: none;
+            border: none;
+            box-shadow: var(--shadow-md);
+        }
+
+        .er-alert-success {
+            background: linear-gradient(135deg, #d1fae5 0%, #a7f3d0 100%);
+            color: #065f46;
+            border-left: 4px solid var(--success);
+        }
+
+        .er-alert-error {
+            background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+            color: #991b1b;
+            border-left: 4px solid var(--danger);
+        }
+
+        /* ========================================
+           📦 MODULE: 빈 상태 디자인
+           ======================================== */
+        .empty-state {
+            text-align: center;
+            padding: 3rem 2rem;
+            color: var(--gray-600);
+        }
+
+        .empty-state i {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.5;
+        }
+
+        .empty-state h5 {
+            color: var(--gray-700);
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        /* ========================================
+           📦 MODULE: 반응형 디자인
+           ======================================== */
+        @media (max-width: 768px) {
+            .er-header h1 {
+                font-size: 2rem;
+            }
+            
+            .er-card {
+                margin-bottom: 1.5rem;
+            }
+            
+            .er-btn {
+                width: 100%;
+                justify-content: center;
+                margin-bottom: 0.5rem;
+            }
+
+            .notice-item {
+                padding: 1rem;
+            }
+
+            .notice-etc {
+                margin: 1rem -1rem -1rem -1rem;
+                padding: 1rem;
+            }
+        }
+
+        /* ========================================
+           📦 MODULE: 애니메이션
+           ======================================== */
+        .fade-in {
+            animation: fadeIn 0.5s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 0.5rem;
+            align-items: center;
+        }
+
+        .today-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 0;
+        }
+
+        .today-date {
+            color: rgba(255,255,255,0.9);
+            font-size: 0.9rem;
+            font-weight: 400;
+        }
+    </style>
+</head>
+<body>
+    <!-- ========================================
+         📦 MODULE: 페이지 헤더
+         ======================================== -->
+    <div class="er-header">
+        <div class="container">
+            <div class="row">
+                <div class="col-12 text-center">
+                    <h1><i class="fas fa-hospital"></i> 응급실 게시판</h1>
+                    <p class="lead">Emergency Department Notice Board System</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- ========================================
+             📦 MODULE: 오늘의 공지사항 (우선 표시)
+             ======================================== -->
+        <div class="er-card">
+            <div class="er-card-header">
+                <div class="today-header w-100">
+                    <span><i class="fas fa-list-alt"></i> 오늘의 공지사항</span>
+                    <div class="action-buttons">
+                        <span class="today-date" id="todayDate"></span>
+                        <button class="er-btn er-btn-success ms-2" onclick="backupTodayNotices()">
+                            <i class="fas fa-download"></i> 백업
+                        </button>
+                        <button class="er-btn er-btn-primary ms-1" onclick="document.getElementById('restoreFile').click()">
+                            <i class="fas fa-upload"></i> 복원
+                        </button>
+                        <input type="file" id="restoreFile" accept=".json" style="display: none;" onchange="restoreNotices(event)">
+                    </div>
+                </div>
+            </div>
+            <div class="card-body p-0">
+                <!-- 필터 섹션 -->
+                <div class="filter-section m-4 mb-0">
+                    <h6><i class="fas fa-filter"></i> 필터 옵션</h6>
+                    <div class="row">
+                        <div class="col-md-6">
+                            <label class="er-form-label">진료과</label>
+                                                            <select class="er-form-control" id="filterDepartment" onchange="filterNotices()">
+                                <option value="">전체 진료과</option>
+                                <option value="GI">GI</option>
+                                <option value="CV">CV</option>
+                                <option value="Biliary">Biliary</option>
+                                <option value="DR">DR</option>
+                                <option value="NS">NS</option>
+                                <option value="GS">GS</option>
+                                <option value="PLM">PLM</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6">
+                            <label class="er-form-label">날짜</label>
+                            <input type="date" class="er-form-control" id="filterDate" onchange="filterNotices()">
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 공지사항 목록 -->
+                <div class="p-4">
+                    <div id="noticesList">
+                        <div class="empty-state">
+                            <i class="fas fa-clipboard-list"></i>
+                            <h5>등록된 공지사항이 없습니다</h5>
+                            <p>새로운 공지사항을 등록해주세요.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ========================================
+             📦 MODULE: 공지사항 입력 폼 (단순화)
+             ======================================== -->
+        <div class="er-card">
+            <div class="er-card-header">
+                <i class="fas fa-plus-circle"></i> 새 공지사항 등록
+            </div>
+            <div class="card-body p-4">
+                <!-- 성공/오류 메시지 -->
+                <div id="successMessage" class="er-alert er-alert-success">
+                    <i class="fas fa-check-circle"></i> 공지사항이 성공적으로 등록되었습니다!
+                </div>
+                <div id="errorMessage" class="er-alert er-alert-error">
+                    <i class="fas fa-exclamation-triangle"></i> 모든 필수 항목을 입력해주세요.
+                </div>
+
+                <form id="noticeForm">
+                    <div class="row">
+                        <!-- 진료과 -->
+                        <div class="col-md-4">
+                            <div class="er-form-group">
+                                <label class="er-form-label">진료과 <span style="color: var(--danger);">*</span></label>
+                                <select class="er-form-control" id="department" required>
+                                    <option value="">선택하세요</option>
+                                    <option value="GI">GI</option>
+                                    <option value="CV">CV</option>
+                                    <option value="Biliary">Biliary</option>
+                                    <option value="DR">DR</option>
+                                    <option value="NS">NS</option>
+                                    <option value="GS">GS</option>
+                                    <option value="PLM">PLM</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <!-- 시작 날짜 -->
+                        <div class="col-md-4">
+                            <div class="er-form-group">
+                                <label class="er-form-label">시작 날짜 <span style="color: var(--danger);">*</span></label>
+                                <input type="date" class="er-form-control" id="startDate" required>
+                            </div>
+                        </div>
+
+                        <!-- 종료 날짜 -->
+                        <div class="col-md-4">
+                            <div class="er-form-group">
+                                <label class="er-form-label">종료 날짜 <span style="color: var(--danger);">*</span></label>
+                                <input type="date" class="er-form-control" id="endDate" required>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 공지 내용 -->
+                    <div class="er-form-group">
+                        <label class="er-form-label">공지 내용 <span style="color: var(--danger);">*</span></label>
+                        <textarea class="er-form-control er-textarea" id="content" 
+                                  placeholder="공지사항 내용을 입력하세요..." required rows="4"></textarea>
+                    </div>
+
+                    <!-- 기타 사항 -->
+                    <div class="er-form-group">
+                        <label class="er-form-label">기타 사항</label>
+                        <textarea class="er-form-control" id="etc" 
+                                  placeholder="추가 정보나 참고사항 (선택)" rows="2"></textarea>
+                    </div>
+
+                    <!-- 버튼 그룹 -->
+                    <div class="d-flex gap-2 justify-content-end">
+                        <button type="button" class="er-btn er-btn-outline" onclick="clearForm()">
+                            <i class="fas fa-redo"></i> 초기화
+                        </button>
+                        <button type="submit" class="er-btn er-btn-primary">
+                            <i class="fas fa-save"></i> 등록
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript 라이브러리 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        /* ========================================
+           📦 MODULE: 전역 변수 및 상태 관리
+           ======================================== */
+        let notices = []; // 공지사항 저장 배열
+
+        /* ========================================
+           📦 MODULE: 초기화 함수
+           ======================================== */
+        document.addEventListener('DOMContentLoaded', function() {
+            console.log('🏥 응급실 게시판 시스템 시작');
+            
+            // 현재 날짜 설정
+            initializeDates();
+            
+            // 저장된 공지사항 로드
+            loadStoredNotices();
+            
+            // 폼 이벤트 리스너 등록
+            setupFormEventListeners();
+            
+            // 오늘 날짜 표시
+            displayTodayDate();
+            
+            // 초기 공지사항 표시
+            displayNotices();
+        });
+
+        /* ========================================
+           📦 MODULE: 날짜 초기화 및 관리
+           ======================================== */
+        function initializeDates() {
+            const today = new Date().toISOString().split('T')[0];
+            
+            // 시작 날짜를 오늘로 설정
+            document.getElementById('startDate').value = today;
+            
+            // 종료 날짜를 내일로 설정
+            const tomorrow = new Date();
+            tomorrow.setDate(tomorrow.getDate() + 1);
+            document.getElementById('endDate').value = tomorrow.toISOString().split('T')[0];
+            
+            // 필터 날짜를 오늘로 설정
+            document.getElementById('filterDate').value = today;
+        }
+
+        function displayTodayDate() {
+            const today = new Date();
+            const options = { 
+                year: 'numeric', 
+                month: 'long', 
+                day: 'numeric', 
+                weekday: 'long' 
+            };
+            document.getElementById('todayDate').textContent = 
+                today.toLocaleDateString('ko-KR', options);
+        }
+
+        /* ========================================
+           📦 MODULE: 폼 이벤트 처리
+           ======================================== */
+        function setupFormEventListeners() {
+            const form = document.getElementById('noticeForm');
+            
+            form.addEventListener('submit', function(e) {
+                e.preventDefault();
+                addNotice();
+            });
+
+            // 종료날짜가 시작날짜보다 빠를 수 없도록 검증
+            document.getElementById('startDate').addEventListener('change', validateDates);
+            document.getElementById('endDate').addEventListener('change', validateDates);
+        }
+
+        function validateDates() {
+            const startDate = document.getElementById('startDate').value;
+            const endDate = document.getElementById('endDate').value;
+            
+            if (startDate && endDate && startDate > endDate) {
+                alert('⚠️ 종료 날짜는 시작 날짜보다 뒤여야 합니다.');
+                document.getElementById('endDate').value = startDate;
+            }
+        }
+
+        /* ========================================
+           📦 MODULE: 공지사항 등록 처리
+           ======================================== */
+        function addNotice() {
+            // 폼 데이터 수집
+            const formData = {
+                id: Date.now(), // 고유 ID
+                department: document.getElementById('department').value,
+                startDate: document.getElementById('startDate').value,
+                endDate: document.getElementById('endDate').value,
+                content: document.getElementById('content').value.trim(),
+                etc: document.getElementById('etc').value.trim(),
+                createdAt: new Date().toISOString()
+            };
+
+            // 입력 검증
+            if (!validateFormData(formData)) {
+                showMessage('error', '모든 필수 항목을 입력해주세요.');
+                return;
+            }
+
+            // 공지사항 추가
+            notices.push(formData);
+            
+            // 로컬 스토리지에 저장
+            saveNotices();
+            
+            // UI 업데이트
+            displayNotices();
+            clearForm();
+            showMessage('success', '공지사항이 성공적으로 등록되었습니다!');
+            
+            console.log('✅ 새 공지사항 등록:', formData);
+        }
+
+        function validateFormData(data) {
+            return data.department && 
+                   data.startDate && 
+                   data.endDate && 
+                   data.content;
+        }
+
+        function showMessage(type, message) {
+            const successDiv = document.getElementById('successMessage');
+            const errorDiv = document.getElementById('errorMessage');
+            
+            // 모든 메시지 숨기기
+            successDiv.style.display = 'none';
+            errorDiv.style.display = 'none';
+            
+            // 해당 메시지 표시
+            if (type === 'success') {
+                successDiv.style.display = 'block';
+                setTimeout(() => successDiv.style.display = 'none', 3000);
+            } else {
+                errorDiv.style.display = 'block';
+                setTimeout(() => errorDiv.style.display = 'none', 3000);
+            }
+        }
+
+        function clearForm() {
+            document.getElementById('noticeForm').reset();
+            initializeDates(); // 날짜 다시 설정
+        }
+
+        /* ========================================
+           📦 MODULE: 공지사항 표시 및 필터링
+           ======================================== */
+        function displayNotices() {
+            const container = document.getElementById('noticesList');
+            const filteredNotices = getFilteredNotices();
+            
+            if (filteredNotices.length === 0) {
+                container.innerHTML = `
+                    <div class="empty-state">
+                        <i class="fas fa-clipboard-list"></i>
+                        <h5>조건에 맞는 공지사항이 없습니다</h5>
+                        <p>필터 조건을 변경하거나 새로운 공지사항을 등록해주세요.</p>
+                    </div>
+                `;
+                return;
+            }
+
+            let html = '';
+            filteredNotices.forEach(notice => {
+                html += createNoticeHTML(notice);
+            });
+            
+            container.innerHTML = html;
+            container.className = 'fade-in';
+        }
+
+        function createNoticeHTML(notice) {
+            const departmentColors = {
+                'GI': '#10b981',
+                'CV': '#ef4444', 
+                'Biliary': '#f59e0b',
+                'DR': '#6366f1',
+                'NS': '#8b5cf6',
+                'GS': '#06b6d4',
+                'PLM': '#84cc16'
+            };
+
+            const departmentIcons = {
+                'GI': 'fas fa-stomach',
+                'CV': 'fas fa-heartbeat', 
+                'Biliary': 'fas fa-liver',
+                'DR': 'fas fa-x-ray',
+                'NS': 'fas fa-brain',
+                'GS': 'fas fa-cut',
+                'PLM': 'fas fa-lungs'
+            };
+
+            const bgColor = departmentColors[notice.department] || '#4f46e5';
+            const icon = departmentIcons[notice.department] || 'fas fa-hospital';
+
+            return `
+                <div class="notice-item" data-id="${notice.id}">
+                    <div class="d-flex justify-content-between align-items-start mb-3">
+                        <span class="notice-department" style="background: linear-gradient(135deg, ${bgColor} 0%, ${bgColor}dd 100%)">
+                            <i class="${icon}"></i> ${notice.department}
+                        </span>
+                        <button class="er-btn er-btn-danger" onclick="deleteNotice(${notice.id})">
+                            <i class="fas fa-trash"></i>
+                        </button>
+                    </div>
+                    
+                    <div class="notice-date">
+                        <i class="fas fa-calendar-alt"></i>
+                        ${formatDate(notice.startDate)} ~ ${formatDate(notice.endDate)}
+                    </div>
+                    
+                    <div class="notice-content">
+                        ${notice.content.replace(/\n/g, '<br>')}
+                    </div>
+                    
+                    ${notice.etc ? `<div class="notice-etc"><i class="fas fa-info-circle"></i> ${notice.etc}</div>` : ''}
+                </div>
+            `;
+        }
+
+        function formatDate(dateString) {
+            const date = new Date(dateString);
+            return date.toLocaleDateString('ko-KR', {
+                month: 'short',
+                day: 'numeric',
+                weekday: 'short'
+            });
+        }
+
+        /* ========================================
+           📦 MODULE: 필터링 시스템
+           ======================================== */
+        function getFilteredNotices() {
+            const filterDate = document.getElementById('filterDate').value;
+            const filterDepartment = document.getElementById('filterDepartment').value;
+            
+            return notices.filter(notice => {
+                // 날짜 필터링
+                const currentDate = filterDate || new Date().toISOString().split('T')[0];
+                const isDateInRange = currentDate >= notice.startDate && currentDate <= notice.endDate;
+                
+                // 진료과 필터링
+                const isDepartmentMatch = !filterDepartment || notice.department === filterDepartment;
+                
+                return isDateInRange && isDepartmentMatch;
+            }).sort((a, b) => {
+                // 최신 등록순으로 정렬
+                return new Date(b.createdAt) - new Date(a.createdAt);
+            });
+        }
+
+        function filterNotices() {
+            displayNotices();
+        }
+
+        /* ========================================
+           📦 MODULE: 데이터 저장 및 로드
+           ======================================== */
+        function saveNotices() {
+            try {
+                localStorage.setItem('erNotices', JSON.stringify(notices));
+                console.log('💾 공지사항 저장 완료');
+            } catch (error) {
+                console.error('❌ 저장 오류:', error);
+            }
+        }
+
+        function loadStoredNotices() {
+            try {
+                const stored = localStorage.getItem('erNotices');
+                if (stored) {
+                    notices = JSON.parse(stored);
+                    console.log(`📋 저장된 공지사항 ${notices.length}개 로드`);
+                }
+            } catch (error) {
+                console.error('❌ 로드 오류:', error);
+                notices = [];
+            }
+        }
+
+        function deleteNotice(id) {
+            if (confirm('이 공지사항을 삭제하시겠습니까?')) {
+                notices = notices.filter(notice => notice.id !== id);
+                saveNotices();
+                displayNotices();
+                showMessage('success', '공지사항이 삭제되었습니다.');
+            }
+        }
+
+        /* ========================================
+           📦 MODULE: 백업 및 유틸리티
+           ======================================== */
+        function backupTodayNotices() {
+            const today = new Date().toISOString().split('T')[0];
+            const todayNotices = notices.filter(notice => {
+                return today >= notice.startDate && today <= notice.endDate;
+            });
+
+            if (todayNotices.length === 0) {
+                alert('오늘 날짜에 해당하는 공지사항이 없습니다.');
+                return;
+            }
+
+            const backupData = {
+                date: today,
+                backupTime: new Date().toISOString(),
+                notices: todayNotices,
+                totalCount: todayNotices.length
+            };
+
+            const dataStr = JSON.stringify(backupData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `ER_Notice_Backup_${today}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            showMessage('success', `오늘의 공지사항 ${todayNotices.length}개를 백업했습니다.`);
+        }
+
+        function restoreNotices(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+
+            if (!file.name.endsWith('.json')) {
+                alert('JSON 파일만 업로드 가능합니다.');
+                return;
+            }
+
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                try {
+                    const backupData = JSON.parse(e.target.result);
+                    
+                    // 백업 데이터 검증
+                    if (!backupData.notices || !Array.isArray(backupData.notices)) {
+                        throw new Error('올바르지 않은 백업 파일 형식입니다.');
+                    }
+
+                    // 복원 확인
+                    const confirmMessage = `백업 파일을 복원하시겠습니까?\n\n` +
+                        `백업 날짜: ${backupData.date || '알 수 없음'}\n` +
+                        `공지사항 개수: ${backupData.totalCount || backupData.notices.length}개\n` +
+                        `백업 시간: ${backupData.backupTime ? new Date(backupData.backupTime).toLocaleString('ko-KR') : '알 수 없음'}\n\n` +
+                        `⚠️ 기존 공지사항에 추가됩니다.`;
+
+                    if (!confirm(confirmMessage)) {
+                        return;
+                    }
+
+                    // 중복 제거를 위한 기존 ID 수집
+                    const existingIds = new Set(notices.map(notice => notice.id));
+                    
+                    // 새로운 공지사항만 추가
+                    let addedCount = 0;
+                    backupData.notices.forEach(backupNotice => {
+                        // ID가 중복되지 않는 경우에만 추가
+                        if (!existingIds.has(backupNotice.id)) {
+                            // 필수 필드 검증
+                            if (backupNotice.department && backupNotice.startDate && 
+                                backupNotice.endDate && backupNotice.content) {
+                                notices.push({
+                                    id: backupNotice.id || Date.now() + Math.random(),
+                                    department: backupNotice.department,
+                                    startDate: backupNotice.startDate,
+                                    endDate: backupNotice.endDate,
+                                    content: backupNotice.content,
+                                    etc: backupNotice.etc || '',
+                                    createdAt: backupNotice.createdAt || new Date().toISOString()
+                                });
+                                addedCount++;
+                            }
+                        }
+                    });
+
+                    // 저장 및 UI 업데이트
+                    saveNotices();
+                    displayNotices();
+                    
+                    showMessage('success', `백업 파일에서 ${addedCount}개의 공지사항을 복원했습니다.`);
+                    console.log(`✅ 백업 복원 완료: ${addedCount}개 추가`);
+
+                } catch (error) {
+                    console.error('❌ 복원 오류:', error);
+                    alert('백업 파일 복원 중 오류가 발생했습니다: ' + error.message);
+                }
+            };
+
+            reader.onerror = function() {
+                alert('파일 읽기 중 오류가 발생했습니다.');
+            };
+
+            reader.readAsText(file);
+            
+            // 파일 입력 초기화
+            event.target.value = '';
+        }
+
+        // 전체 공지사항 백업 (추가 기능)
+        function backupAllNotices() {
+            if (notices.length === 0) {
+                alert('백업할 공지사항이 없습니다.');
+                return;
+            }
+
+            const backupData = {
+                backupType: 'all',
+                backupTime: new Date().toISOString(),
+                notices: notices,
+                totalCount: notices.length
+            };
+
+            const dataStr = JSON.stringify(backupData, null, 2);
+            const dataBlob = new Blob([dataStr], {type: 'application/json'});
+            const url = URL.createObjectURL(dataBlob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = `ER_Notice_All_Backup_${new Date().toISOString().split('T')[0]}.json`;
+            link.click();
+            URL.revokeObjectURL(url);
+
+            showMessage('success', `전체 공지사항 ${notices.length}개를 백업했습니다.`);
+        }
+
+        console.log('🏥 응급실 게시판 시스템 로드 완료');
+    </script>
+</body>
+</html>
