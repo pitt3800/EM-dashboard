@@ -164,11 +164,6 @@
         color: white;
       }
 
-      .status-demo {
-        background: var(--info);
-        color: white;
-      }
-
       /* ========================================
            📦 MODULE: Apple 스타일 카드 디자인
            ======================================== */
@@ -320,14 +315,16 @@
         gap: 0.5rem;
         flex-shrink: 0;
         margin-top: 0.25rem;
+        flex-direction: column;
       }
 
       .notice-dates {
-        color: var(--gray-600);
-        font-size: 0.7rem;
+        color: var(--gray-500);
+        font-size: 0.65rem;
         white-space: nowrap;
-        align-self: flex-start;
-        margin-top: 0.5rem;
+        align-self: flex-end;
+        margin-bottom: 0.3rem;
+        order: 1;
       }
 
       .notice-author {
@@ -335,6 +332,12 @@
         font-size: 0.75rem;
         font-style: italic;
         margin-right: 0.5rem;
+        order: 2;
+      }
+
+      .notice-delete-btn {
+        order: 3;
+        align-self: flex-end;
       }
 
       /* ========================================
@@ -1062,67 +1065,6 @@
     </div>
 
     <!-- Google Apps Script 설정 도움말 모달 -->
-    <div
-      id="setupModal"
-      class="modal-overlay"
-      onclick="closeModal('setupModal')"
-    >
-      <div
-        class="modal-content"
-        onclick="event.stopPropagation()"
-        style="width: 90%; max-width: 800px"
-      >
-        <div class="modal-header">
-          <span><i class="fas fa-cog"></i> Google Apps Script 설정 가이드</span>
-          <button class="modal-close" onclick="closeModal('setupModal')">
-            &times;
-          </button>
-        </div>
-        <div class="modal-body">
-          <div class="mb-4">
-            <h6><i class="fas fa-info-circle"></i> 현재 상태</h6>
-            <p id="setupStatus" class="text-warning">
-              Google Apps Script URL이 설정되지 않았습니다.
-            </p>
-          </div>
-
-          <div class="mb-4">
-            <h6><i class="fas fa-list-ol"></i> 설정 방법</h6>
-            <ol>
-              <li>Google Apps Script에서 새 프로젝트를 생성하세요</li>
-              <li>웹 앱으로 배포하여 URL을 받으세요</li>
-              <li>코드 상단의 GOOGLE_SCRIPT_URL 변수에 URL을 입력하세요</li>
-              <li>파일을 저장하고 새로고침하세요</li>
-            </ol>
-          </div>
-
-          <div class="mb-4">
-            <h6><i class="fas fa-code"></i> 수정할 코드 위치</h6>
-            <pre
-              style="
-                background: #f8f9fa;
-                padding: 1rem;
-                border-radius: 8px;
-                font-size: 0.8rem;
-              "
-            >
-// 🔧 Google Apps Script 웹 앱 URL을 여기에 입력하세요
-const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA0wNP9kooZOmImUdxxzgA5iA8NaummeUyPoIXa6DCfZAFjHSB_1TzuqJQ/exec
-';</pre
-            >
-          </div>
-
-          <div class="text-center">
-            <button
-              class="er-btn er-btn-outline"
-              onclick="closeModal('setupModal')"
-            >
-              <i class="fas fa-check"></i> 확인
-            </button>
-          </div>
-        </div>
-      </div>
-    </div>
 
     <!-- JavaScript 라이브러리 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
@@ -1134,16 +1076,14 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
 
       // ==================== 수정 가능 구역 시작 ====================
       // 🔧 Google Apps Script 웹 앱 URL을 여기에 입력하세요
-      const GOOGLE_SCRIPT_URL = "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE";
+      const GOOGLE_SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA0wNP9kooZOmImUdxxzgA5iA8NaummeUyPoIXa6DCfZAFjHSB_1TzuqJQ/exec";
 
       // 🔧 자동 새로고침 간격 (밀리초) - 0으로 설정하면 자동 새로고침 비활성화
       const AUTO_REFRESH_INTERVAL = 300000; // 5분 (300초)
 
       // 🔧 연결 상태 확인 간격 (밀리초)
       const CONNECTION_CHECK_INTERVAL = 10000; // 10초
-
-      // 🔧 데모 모드 활성화 (true로 설정하면 샘플 데이터 사용)
-      const DEMO_MODE = true;
       // ==================== 수정 가능 구역 끝 ====================
 
       let notices = []; // 공지사항 저장 배열
@@ -1151,7 +1091,6 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
       let isOnline = false; // 연결 상태
       let autoRefreshTimer = null; // 자동 새로고침 타이머
       let connectionCheckTimer = null; // 연결 상태 확인 타이머
-      let isDemoMode = false; // 데모 모드 상태
 
       /* ========================================
            📦 MODULE: 초기화 함수
@@ -1175,10 +1114,16 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
           GOOGLE_SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE" ||
           !GOOGLE_SCRIPT_URL
         ) {
-          console.warn(
-            "⚠️ Google Apps Script URL이 설정되지 않았습니다. 데모 모드로 전환합니다."
+          console.warn("⚠️ Google Apps Script URL이 설정되지 않았습니다.");
+          showConnectionStatus(
+            "offline",
+            "Google Apps Script URL을 설정해주세요"
           );
-          enableDemoMode();
+          showMessage(
+            "error",
+            "Google Apps Script URL을 설정해주세요. 코드 상단의 GOOGLE_SCRIPT_URL 변수를 확인하세요."
+          );
+          return;
         } else {
           console.log(
             "✅ Google Apps Script URL 설정 확인됨. 온라인 모드로 시작합니다."
@@ -1196,80 +1141,10 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
       }
 
       /* ========================================
-           📦 MODULE: 데모 모드 관리
-           ======================================== */
-      function enableDemoMode() {
-        isDemoMode = true;
-        isOnline = false;
-
-        showConnectionStatus("demo", "데모 모드 - 샘플 데이터 사용 중");
-
-        // 샘플 데이터 로드
-        loadDemoData();
-        displayNotices();
-
-        // 경고 메시지 표시
-        showMessage(
-          "warning",
-          "Google Apps Script URL이 설정되지 않아 데모 모드로 실행 중입니다. 실제 데이터 저장은 불가능합니다."
-        );
-
-        console.log("🎭 데모 모드 활성화됨");
-      }
-
-      function loadDemoData() {
-        const today = new Date();
-        const tomorrow = new Date(today);
-        tomorrow.setDate(tomorrow.getDate() + 1);
-
-        notices = [
-          {
-            id: "demo1",
-            department: "GI",
-            startDate: today.toISOString().split("T")[0],
-            endDate: tomorrow.toISOString().split("T")[0],
-            content:
-              "위내시경 검사실 장비 점검으로 인한 일시 중단 안내\n\n오늘 14:00-16:00 사이 위내시경 장비 정기점검이 있습니다.\n해당 시간대 응급 위내시경은 2층 시술실에서 진행됩니다.",
-            author: "김응급",
-            createdAt: new Date().toISOString(),
-          },
-          {
-            id: "demo2",
-            department: "CV",
-            startDate: today.toISOString().split("T")[0],
-            endDate: "",
-            content:
-              "심장카테터 시술실 응급 사용 가능\n\n현재 심장카테터실 1,2번 모두 사용 가능합니다.\nSTEMI 환자 내원 시 즉시 연락 바랍니다.",
-            author: "이심장",
-            createdAt: new Date().toISOString(),
-          },
-          {
-            id: "demo3",
-            department: "NS",
-            startDate: today.toISOString().split("T")[0],
-            endDate: "",
-            content:
-              "뇌혈관조영술 대기시간 단축 안내\n\n오늘부터 뇌혈관조영술 대기시간이 30분 이내로 단축되었습니다.\n급성 뇌졸중 환자 내원 시 즉시 협진 요청해주세요.",
-            author: "박뇌외과",
-            createdAt: new Date().toISOString(),
-          },
-        ];
-
-        console.log("🎭 샘플 데이터 로드 완료");
-      }
-
-      /* ========================================
            📦 MODULE: 구글 시트 API 통신
            ======================================== */
 
       async function loadNoticesFromGoogle() {
-        if (isDemoMode) {
-          console.log(
-            "🎭 데모 모드에서는 Google Sheets 연결을 시도하지 않습니다."
-          );
-          return;
-        }
-
         showConnectionStatus("loading", "데이터 로드 중...");
 
         try {
@@ -1314,19 +1189,12 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
           isOnline = false;
           showConnectionStatus("offline", "연결 실패: " + error.message);
 
-          // 오류 발생시 데모 모드로 전환
-          if (!isDemoMode) {
-            console.log("🎭 오류 발생으로 데모 모드로 전환합니다.");
-            enableDemoMode();
-          }
+          // 로컬 백업이 있다면 사용
+          loadLocalBackup();
         }
       }
 
       async function addNoticeToGoogle(noticeData) {
-        if (isDemoMode) {
-          return await addNoticeToDemo(noticeData);
-        }
-
         try {
           showConnectionStatus("loading", "저장 중...");
 
@@ -1389,10 +1257,6 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
       }
 
       async function deleteNoticeFromGoogle(id) {
-        if (isDemoMode) {
-          return await deleteNoticeFromDemo(id);
-        }
-
         try {
           showConnectionStatus("loading", "삭제 중...");
 
@@ -1436,64 +1300,6 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
       }
 
       /* ========================================
-           📦 MODULE: 데모 모드 CRUD 함수들
-           ======================================== */
-      async function addNoticeToDemo(noticeData) {
-        console.log("🎭 데모 모드: 공지사항 추가");
-
-        // 가짜 로딩 시뮬레이션
-        showConnectionStatus("loading", "저장 중... (데모)");
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-
-        const newNotice = {
-          id: "demo_" + Date.now(),
-          ...noticeData,
-          createdAt: new Date().toISOString(),
-        };
-
-        notices.unshift(newNotice);
-        displayNotices();
-        saveLocalBackup();
-
-        showConnectionStatus("demo", "데모 모드 - 샘플 데이터 사용 중");
-        showMessage("success", "공지사항이 등록되었습니다! (데모 모드)");
-        clearForm();
-
-        return true;
-      }
-
-      async function deleteNoticeFromDemo(id) {
-        console.log("🎭 데모 모드: 공지사항 삭제");
-
-        showConnectionStatus("loading", "삭제 중... (데모)");
-        await new Promise((resolve) => setTimeout(resolve, 500));
-
-        const noticeIndex = notices.findIndex((n) => n.id === id);
-        if (noticeIndex > -1) {
-          const deletedNotice = notices[noticeIndex];
-          notices.splice(noticeIndex, 1);
-
-          // 히스토리에 추가
-          deletedNotices.push({
-            ...deletedNotice,
-            deletedAt: new Date().toISOString(),
-            deletedBy: "demo_user",
-          });
-          saveDeletedNotices();
-
-          displayNotices();
-          saveLocalBackup();
-
-          showConnectionStatus("demo", "데모 모드 - 샘플 데이터 사용 중");
-          showMessage("success", "공지사항이 삭제되었습니다! (데모 모드)");
-
-          return true;
-        }
-
-        return false;
-      }
-
-      /* ========================================
            📦 MODULE: 연결 상태 관리
            ======================================== */
 
@@ -1503,7 +1309,6 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
           "status-online",
           "status-offline",
           "status-loading",
-          "status-demo",
         ];
 
         // 기존 상태 클래스 제거
@@ -1516,7 +1321,6 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
           online: "fas fa-check-circle",
           offline: "fas fa-exclamation-circle",
           loading: "fas fa-spinner fa-spin",
-          demo: "fas fa-flask",
         };
 
         statusDiv.innerHTML = `<i class="${icons[status]}"></i> ${message}`;
@@ -1539,42 +1343,9 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
           refreshBtn.disabled = false;
           refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> 새로고침';
         }
-
-        // 데모 모드일 때 설정 버튼 추가 (한 번만)
-        if (status === "demo" && !document.getElementById("setupBtn")) {
-          const setupBtn = document.createElement("button");
-          setupBtn.id = "setupBtn";
-          setupBtn.className = "er-btn er-btn-outline ms-2";
-          setupBtn.innerHTML = '<i class="fas fa-cog"></i> 설정';
-          setupBtn.onclick = () => showSetupModal();
-
-          const actionButtons = document.querySelector(".action-buttons");
-          actionButtons.insertBefore(setupBtn, actionButtons.firstChild);
-        }
-      }
-
-      function showSetupModal() {
-        const modal = document.getElementById("setupModal");
-        const statusElement = document.getElementById("setupStatus");
-
-        if (
-          GOOGLE_SCRIPT_URL === "YOUR_GOOGLE_APPS_SCRIPT_URL_HERE" ||
-          !GOOGLE_SCRIPT_URL
-        ) {
-          statusElement.textContent =
-            "Google Apps Script URL이 설정되지 않았습니다.";
-          statusElement.className = "text-warning";
-        } else {
-          statusElement.textContent = "URL이 설정되었지만 연결에 실패했습니다.";
-          statusElement.className = "text-danger";
-        }
-
-        modal.style.display = "flex";
       }
 
       function startConnectionMonitoring() {
-        if (isDemoMode) return;
-
         connectionCheckTimer = setInterval(async () => {
           try {
             const response = await fetch(
@@ -1599,8 +1370,6 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
       }
 
       function startAutoRefresh() {
-        if (isDemoMode) return;
-
         autoRefreshTimer = setInterval(async () => {
           if (isOnline) {
             console.log("🔄 자동 새로고침 실행");
@@ -1618,7 +1387,7 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
           const backupData = {
             notices: notices,
             timestamp: new Date().toISOString(),
-            source: isDemoMode ? "demo_mode" : "google_sheets",
+            source: "google_sheets",
           };
           localStorage.setItem("erNoticesBackup", JSON.stringify(backupData));
           console.log("💾 로컬 백업 저장");
@@ -1635,18 +1404,18 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
             notices = backupData.notices || [];
             displayNotices();
             showMessage(
-              "success",
-              `백업 데이터를 로드했습니다. (${new Date(
+              "error",
+              `오프라인 모드: 마지막 백업 데이터를 표시합니다 (${new Date(
                 backupData.timestamp
               ).toLocaleString("ko-KR")})`
             );
             console.log("📋 로컬 백업에서 데이터 로드");
           } else {
-            showMessage("error", "저장된 백업 데이터가 없습니다.");
+            displayEmptyState();
           }
         } catch (error) {
           console.error("❌ 로컬 백업 로드 오류:", error);
-          showMessage("error", "백업 데이터 로드 중 오류가 발생했습니다.");
+          displayEmptyState();
         }
       }
 
@@ -1824,8 +1593,6 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
             })}`
           : " (무기한)";
 
-        const canDelete = !isDemoMode ? isOnline : true; // 데모모드에서는 항상 삭제 가능
-
         return `
           <div class="notice-item" data-id="${notice.id}">
             <div class="notice-left">
@@ -1837,17 +1604,17 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
                   ${notice.content.replace(/\n/g, "<br>")}
                 </div>
               </div>
-              <span class="notice-dates">${startDate}${endDateText}</span>
             </div>
             <div class="notice-right">
+              <span class="notice-dates">${startDate}${endDateText}</span>
               ${
                 notice.author
                   ? `<span class="notice-author">${notice.author}</span>`
                   : ""
               }
-              <button class="er-btn-danger-small" onclick="deleteNotice('${
+              <button class="er-btn-danger-small notice-delete-btn" onclick="deleteNotice('${
                 notice.id
-              }')" title="삭제" ${!canDelete ? "disabled" : ""}>
+              }')" title="삭제" ${!isOnline ? "disabled" : ""}>
                 <i class="fas fa-trash"></i>
               </button>
             </div>
@@ -1881,7 +1648,7 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
       }
 
       async function deleteNotice(id) {
-        if (!isDemoMode && !isOnline) {
+        if (!isOnline) {
           showMessage("error", "오프라인 상태에서는 삭제할 수 없습니다.");
           return;
         }
@@ -1893,7 +1660,7 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
             const deletedNotice = {
               ...noticeToDelete,
               deletedAt: new Date().toISOString(),
-              deletedBy: isDemoMode ? "demo_user" : "system",
+              deletedBy: "system",
             };
             deletedNotices.push(deletedNotice);
             saveDeletedNotices();
@@ -1908,7 +1675,32 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
            ======================================== */
 
       function loadBackupData() {
-        loadLocalBackup();
+        try {
+          const backup = localStorage.getItem("erNoticesBackup");
+          if (!backup) {
+            showMessage("error", "저장된 백업 데이터가 없습니다.");
+            return;
+          }
+
+          const backupData = JSON.parse(backup);
+          notices = backupData.notices || [];
+          displayNotices();
+
+          const backupTime = new Date(backupData.timestamp).toLocaleString(
+            "ko-KR"
+          );
+          showMessage(
+            "success",
+            `백업 데이터를 불러왔습니다. (백업 시간: ${backupTime})`
+          );
+          console.log("📋 백업 데이터 로드 완료");
+        } catch (error) {
+          console.error("❌ 백업 데이터 로드 오류:", error);
+          showMessage(
+            "error",
+            "백업 데이터를 불러오는 중 오류가 발생했습니다."
+          );
+        }
       }
 
       function showAllNotices() {
@@ -2003,8 +1795,6 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
             })}`
           : " (무기한)";
 
-        const canRestore = !isDemoMode ? isOnline : true;
-
         return `
           <div class="notice-item" style="opacity: 0.7; border-left: 4px solid var(--danger);">
             <div class="notice-left">
@@ -2023,7 +1813,7 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
               <button class="er-btn er-btn-outline" onclick="restoreNotice('${
                 notice.id
               }')" title="복원" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;" ${
-          !canRestore ? "disabled" : ""
+          !isOnline ? "disabled" : ""
         }>
                 <i class="fas fa-undo"></i> 복원
               </button>
@@ -2033,7 +1823,7 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
       }
 
       async function restoreNotice(id) {
-        if (!isDemoMode && !isOnline) {
+        if (!isOnline) {
           showMessage("error", "오프라인 상태에서는 복원할 수 없습니다.");
           return;
         }
@@ -2095,12 +1885,7 @@ const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA
 
       async function refreshNotices() {
         console.log("🔄 수동 새로고침 실행");
-        if (isDemoMode) {
-          showMessage("success", "데모 모드에서 새로고침되었습니다.");
-          displayNotices();
-        } else {
-          await loadNoticesFromGoogle();
-        }
+        await loadNoticesFromGoogle();
       }
 
       function exportToday() {
