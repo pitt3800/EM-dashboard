@@ -755,7 +755,7 @@
       
       // ==================== 수정 가능 구역 시작 ====================
       // 🔧 Google Apps Script 웹 앱 URL을 여기에 입력하세요
-      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA0wNP9kooZOmImUdxxzgA5iA8NaummeUyPoIXa6DCfZAFjHSB_1TzuqJQ/exec';
+      const GOOGLE_SCRIPT_URL = 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE';
       
       // 🔧 자동 새로고침 간격 (밀리초) - 0으로 설정하면 자동 새로고침 비활성화
       const AUTO_REFRESH_INTERVAL = 30000; // 30초
@@ -776,10 +776,7 @@
         console.log("🏥 응급실 게시판 시스템 시작 (구글 시트 연동)");
 
         // URL 설정 확인
-        if (GOOGLE_SCRIPT_URL ===
-         'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA0wNP9kooZOmImUdxxzgA5iA8NaummeUyPoIXa6DCfZAFjHSB_1TzuqJQ/exec
-          ') 
-         {
+        if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE') {
           showConnectionStatus('offline', 'Google Apps Script URL이 설정되지 않았습니다');
           showMessage('error', 'Google Apps Script URL을 설정해주세요. 코드 상단의 GOOGLE_SCRIPT_URL 변수를 확인하세요.');
           return;
