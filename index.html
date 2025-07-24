@@ -527,12 +527,6 @@
         border-left: 4px solid var(--danger);
       }
 
-      .er-alert-warning {
-        background: linear-gradient(135deg, #fef3c7 0%, #fed7aa 100%);
-        color: #92400e;
-        border-left: 4px solid var(--warning);
-      }
-
       /* ========================================
            📦 MODULE: 빈 상태 디자인
            ======================================== */
@@ -887,10 +881,6 @@
           <div id="errorMessage" class="er-alert er-alert-error">
             <i class="fas fa-exclamation-triangle"></i>
             <span id="errorText">오류가 발생했습니다.</span>
-          </div>
-          <div id="warningMessage" class="er-alert er-alert-warning">
-            <i class="fas fa-info-circle"></i>
-            <span id="warningText">Google Apps Script URL을 설정해주세요.</span>
           </div>
 
           <form id="noticeForm">
@@ -1496,24 +1486,17 @@
       function showMessage(type, message) {
         const successDiv = document.getElementById("successMessage");
         const errorDiv = document.getElementById("errorMessage");
-        const warningDiv = document.getElementById("warningMessage");
         const successText = document.getElementById("successText");
         const errorText = document.getElementById("errorText");
-        const warningText = document.getElementById("warningText");
 
         // 모든 메시지 숨기기
         successDiv.style.display = "none";
         errorDiv.style.display = "none";
-        warningDiv.style.display = "none";
 
         if (type === "success") {
           successText.textContent = message;
           successDiv.style.display = "block";
           setTimeout(() => (successDiv.style.display = "none"), 5000);
-        } else if (type === "warning") {
-          warningText.textContent = message;
-          warningDiv.style.display = "block";
-          setTimeout(() => (warningDiv.style.display = "none"), 8000);
         } else {
           errorText.textContent = message;
           errorDiv.style.display = "block";
@@ -1806,9 +1789,9 @@
                   ${notice.content.replace(/\n/g, "<br>")}
                 </div>
               </div>
-              <span class="notice-dates">${startDate}${endDateText}</span>
             </div>
             <div class="notice-right">
+              <span class="notice-dates">${startDate}${endDateText}</span>
               <span class="notice-author" style="color: var(--danger);">삭제: ${deletedTime}</span>
               <button class="er-btn er-btn-outline" onclick="restoreNotice('${
                 notice.id
