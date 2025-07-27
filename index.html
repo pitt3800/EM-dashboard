@@ -1066,14 +1066,18 @@
 
       // ==================== 수정 가능 구역 시작 ====================
       // 🔧 Google Apps Script 웹 앱 URL을 여기에 입력하세요
+      // 빈 문자열로 두면 데모 모드로 작동합니다
       const GOOGLE_SCRIPT_URL =
         "https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA0wNP9kooZOmImUdxxzgA5iA8NaummeUyPoIXa6DCfZAFjHSB_1TzuqJQ/exec";
 
       // 🔧 자동 새로고침 간격 (밀리초) - 0으로 설정하면 자동 새로고침 비활성화
-      const AUTO_REFRESH_INTERVAL = 300000; // 5분 (300초)
+      const AUTO_REFRESH_INTERVAL = 0; // 데모 모드에서는 비활성화
 
       // 🔧 연결 상태 확인 간격 (밀리초)
       const CONNECTION_CHECK_INTERVAL = 10000; // 10초
+
+      // 🔧 데모 모드 설정 (true: 데모 데이터 사용, false: 실제 Google Sheets 사용)
+      const DEMO_MODE = true;
       // ==================== 수정 가능 구역 끝 ====================
 
       let notices = []; // 공지사항 저장 배열
