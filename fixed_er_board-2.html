@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+      .status-demo {
+        background: var(--info);
+        color: white;
+      }<!DOCTYPE html>
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
@@ -26,27 +29,27 @@
            📦 MODULE: Apple 스타일 색상 시스템
            ======================================== */
       :root {
-        --primary: #007AFF;
-        --primary-light: #5AC8FA;
-        --primary-dark: #0051D5;
-        --secondary: #F2F2F7;
-        --accent: #32D74B;
-        --success: #34C759;
-        --warning: #FF9500;
-        --danger: #FF3B30;
-        --info: #007AFF;
-        --dark: #1C1C1E;
-        --light: #FFFFFF;
-        --gray-50: #FAFAFA;
-        --gray-100: #F5F5F7;
-        --gray-200: #E5E5EA;
-        --gray-300: #D1D1D6;
-        --gray-400: #8E8E93;
+        --primary: #007aff;
+        --primary-light: #5ac8fa;
+        --primary-dark: #0051d5;
+        --secondary: #f2f2f7;
+        --accent: #32d74b;
+        --success: #34c759;
+        --warning: #ff9500;
+        --danger: #ff3b30;
+        --info: #007aff;
+        --dark: #1c1c1e;
+        --light: #ffffff;
+        --gray-50: #fafafa;
+        --gray-100: #f5f5f7;
+        --gray-200: #e5e5ea;
+        --gray-300: #d1d1d6;
+        --gray-400: #8e8e93;
         --gray-500: #636366;
-        --gray-600: #48484A;
-        --gray-700: #3A3A3C;
-        --gray-800: #2C2C2E;
-        --gray-900: #1C1C1E;
+        --gray-600: #48484a;
+        --gray-700: #3a3a3c;
+        --gray-800: #2c2c2e;
+        --gray-900: #1c1c1e;
         --shadow-sm: 0 1px 3px rgba(0, 0, 0, 0.04);
         --shadow-md: 0 4px 16px rgba(0, 0, 0, 0.06);
         --shadow-lg: 0 8px 32px rgba(0, 0, 0, 0.08);
@@ -60,13 +63,14 @@
       body {
         background: linear-gradient(
           135deg,
-          #F5F5F7 0%,
-          #FAFAFA 25%,
-          #FFFFFF 50%,
-          #F2F2F7 75%,
-          #E5E5EA 100%
+          #f5f5f7 0%,
+          #fafafa 25%,
+          #ffffff 50%,
+          #f2f2f7 75%,
+          #e5e5ea 100%
         );
-        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", "Inter", sans-serif;
+        font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display",
+          "Helvetica Neue", "Inter", sans-serif;
         color: var(--dark);
         line-height: 1.47058823529412;
         min-height: 100vh;
@@ -94,7 +98,11 @@
         left: 0;
         right: 0;
         bottom: 0;
-        background: linear-gradient(135deg, rgba(0, 122, 255, 0.02) 0%, rgba(90, 200, 250, 0.02) 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(0, 122, 255, 0.02) 0%,
+          rgba(90, 200, 250, 0.02) 100%
+        );
       }
 
       .er-header .container {
@@ -106,7 +114,11 @@
         font-size: 3rem;
         font-weight: 700;
         margin-bottom: 0.5rem;
-        background: linear-gradient(135deg, var(--primary) 0%, var(--primary-light) 100%);
+        background: linear-gradient(
+          135deg,
+          var(--primary) 0%,
+          var(--primary-light) 100%
+        );
         -webkit-background-clip: text;
         -webkit-text-fill-color: transparent;
         background-clip: text;
@@ -272,7 +284,12 @@
         left: -100%;
         width: 100%;
         height: 100%;
-        background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+        background: linear-gradient(
+          90deg,
+          transparent,
+          rgba(255, 255, 255, 0.3),
+          transparent
+        );
         transition: left 0.8s;
       }
 
@@ -377,7 +394,7 @@
       }
 
       .er-btn-success:hover:not(:disabled) {
-        background: #30D158;
+        background: #30d158;
         transform: translateY(-1px);
         box-shadow: var(--shadow-lg);
         color: white;
@@ -385,7 +402,7 @@
 
       .er-btn-success:active:not(:disabled) {
         transform: scale(0.98);
-        background: #28CD41;
+        background: #28cd41;
       }
 
       .er-btn-outline {
@@ -467,7 +484,11 @@
            📦 MODULE: 필터 섹션
            ======================================== */
       .filter-section {
-        background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(248, 250, 252, 0.9) 100%);
+        background: linear-gradient(
+          135deg,
+          rgba(255, 255, 255, 0.9) 0%,
+          rgba(248, 250, 252, 0.9) 100%
+        );
         backdrop-filter: blur(10px);
         border-radius: var(--border-radius-sm);
         padding: 1.5rem;
@@ -509,6 +530,12 @@
         border-left: 4px solid var(--danger);
       }
 
+      .er-alert-info {
+        background: linear-gradient(135deg, #dbeafe 0%, #bfdbfe 100%);
+        color: #1e40af;
+        border-left: 4px solid var(--info);
+      }
+
       /* ========================================
            📦 MODULE: 빈 상태 디자인
            ======================================== */
@@ -544,7 +571,9 @@
       }
 
       @keyframes spin {
-        to { transform: rotate(360deg); }
+        to {
+          transform: rotate(360deg);
+        }
       }
 
       /* ========================================
@@ -755,8 +784,10 @@
         <div class="row">
           <div class="col-12 text-center">
             <h1><i class="fas fa-hospital"></i> 응급실 게시판</h1>
-            <p class="lead">Emergency Department Notice Board System - 공유버전</p>
-            <small style="opacity: 0.8;">
+            <p class="lead">
+              Emergency Department Notice Board System - 공유버전
+            </p>
+            <small style="opacity: 0.8">
               <i class="fas fa-cloud"></i> 실시간 정보 공유 시스템
             </small>
           </div>
@@ -781,28 +812,16 @@
               >
                 <i class="fas fa-sync-alt"></i> 새로고침
               </button>
-              <button
-                class="er-btn er-btn-outline"
-                onclick="loadBackupData()"
-              >
+              <button class="er-btn er-btn-outline" onclick="loadBackupData()">
                 <i class="fas fa-upload"></i> 불러오기
               </button>
-              <button
-                class="er-btn er-btn-outline"
-                onclick="showAllNotices()"
-              >
+              <button class="er-btn er-btn-outline" onclick="showAllNotices()">
                 <i class="fas fa-list"></i> 전체공지
               </button>
-              <button
-                class="er-btn er-btn-outline"
-                onclick="showHistory()"
-              >
+              <button class="er-btn er-btn-outline" onclick="showHistory()">
                 <i class="fas fa-history"></i> History
               </button>
-              <button
-                class="er-btn er-btn-primary"
-                onclick="exportToday()"
-              >
+              <button class="er-btn er-btn-primary" onclick="exportToday()">
                 <i class="fas fa-download"></i> 내보내기
               </button>
             </div>
@@ -848,7 +867,7 @@
               <div class="empty-state">
                 <i class="fas fa-clipboard-list"></i>
                 <h5>공지사항을 불러오는 중...</h5>
-                <p>Google Apps Script 연결을 확인하고 있습니다.</p>
+                <p>시스템을 초기화하고 있습니다.</p>
               </div>
             </div>
           </div>
@@ -865,10 +884,16 @@
         <div class="card-body p-4">
           <!-- 성공/오류 메시지 -->
           <div id="successMessage" class="er-alert er-alert-success">
-            <i class="fas fa-check-circle"></i> <span id="successText">공지사항이 성공적으로 등록되었습니다!</span>
+            <i class="fas fa-check-circle"></i>
+            <span id="successText">공지사항이 성공적으로 등록되었습니다!</span>
           </div>
           <div id="errorMessage" class="er-alert er-alert-error">
-            <i class="fas fa-exclamation-triangle"></i> <span id="errorText">오류가 발생했습니다.</span>
+            <i class="fas fa-exclamation-triangle"></i>
+            <span id="errorText">오류가 발생했습니다.</span>
+          </div>
+          <div id="infoMessage" class="er-alert er-alert-info">
+            <i class="fas fa-info-circle"></i>
+            <span id="infoText">시스템 정보가 여기에 표시됩니다.</span>
           </div>
 
           <form id="noticeForm">
@@ -906,7 +931,10 @@
                       id="startDate"
                       required
                     />
-                    <i class="fas fa-calendar-alt date-calendar-icon" onclick="document.getElementById('startDate').showPicker()"></i>
+                    <i
+                      class="fas fa-calendar-alt date-calendar-icon"
+                      onclick="document.getElementById('startDate').showPicker()"
+                    ></i>
                   </div>
                 </div>
               </div>
@@ -916,15 +944,16 @@
                 <div class="er-form-group">
                   <label class="er-form-label"
                     >종료 날짜
-                    <small style="color: var(--gray-600)">(선택사항)</small></label
+                    <small style="color: var(--gray-600)"
+                      >(선택사항)</small
+                    ></label
                   >
                   <div class="date-input-container">
-                    <input
-                      type="date"
-                      class="er-form-control"
-                      id="endDate"
-                    />
-                    <i class="fas fa-calendar-alt date-calendar-icon" onclick="document.getElementById('endDate').showPicker()"></i>
+                    <input type="date" class="er-form-control" id="endDate" />
+                    <i
+                      class="fas fa-calendar-alt date-calendar-icon"
+                      onclick="document.getElementById('endDate').showPicker()"
+                    ></i>
                   </div>
                 </div>
               </div>
@@ -964,7 +993,11 @@
               >
                 <i class="fas fa-redo"></i> 초기화
               </button>
-              <button type="submit" class="er-btn er-btn-primary" id="submitBtn">
+              <button
+                type="submit"
+                class="er-btn er-btn-primary"
+                id="submitBtn"
+              >
                 <i class="fas fa-save"></i> 등록
               </button>
             </div>
@@ -976,13 +1009,23 @@
     <!-- ========================================
          📦 MODULE: 모달 팝업들
          ======================================== -->
-    
+
     <!-- 전체 공지사항 모달 -->
-    <div id="allNoticesModal" class="modal-overlay" onclick="closeModal('allNoticesModal')">
-      <div class="modal-content" onclick="event.stopPropagation()" style="width: 90%; max-width: 1000px;">
+    <div
+      id="allNoticesModal"
+      class="modal-overlay"
+      onclick="closeModal('allNoticesModal')"
+    >
+      <div
+        class="modal-content"
+        onclick="event.stopPropagation()"
+        style="width: 90%; max-width: 1000px"
+      >
         <div class="modal-header">
           <span><i class="fas fa-list"></i> 전체 공지사항 (미래 포함)</span>
-          <button class="modal-close" onclick="closeModal('allNoticesModal')">&times;</button>
+          <button class="modal-close" onclick="closeModal('allNoticesModal')">
+            &times;
+          </button>
         </div>
         <div class="modal-body">
           <div id="allNoticesList">
@@ -996,11 +1039,21 @@
     </div>
 
     <!-- History 모달 -->
-    <div id="historyModal" class="modal-overlay" onclick="closeModal('historyModal')">
-      <div class="modal-content" onclick="event.stopPropagation()" style="width: 90%; max-width: 1000px;">
+    <div
+      id="historyModal"
+      class="modal-overlay"
+      onclick="closeModal('historyModal')"
+    >
+      <div
+        class="modal-content"
+        onclick="event.stopPropagation()"
+        style="width: 90%; max-width: 1000px"
+      >
         <div class="modal-header">
           <span><i class="fas fa-history"></i> 삭제된 공지사항 히스토리</span>
-          <button class="modal-close" onclick="closeModal('historyModal')">&times;</button>
+          <button class="modal-close" onclick="closeModal('historyModal')">
+            &times;
+          </button>
         </div>
         <div class="modal-body">
           <div id="historyList">
@@ -1014,8 +1067,6 @@
       </div>
     </div>
 
-    <!-- Google Apps Script 설정 도움말 모달 -->
-
     <!-- JavaScript 라이브러리 -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
 
@@ -1023,14 +1074,15 @@
       /* ========================================
            📦 MODULE: 전역 변수 및 설정
            ======================================== */
-      
+
       // ==================== 수정 가능 구역 시작 ====================
       // 🔧 Google Apps Script 웹 앱 URL을 여기에 입력하세요
-      const GOOGLE_SCRIPT_URL = 'https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA0wNP9kooZOmImUdxxzgA5iA8NaummeUyPoIXa6DCfZAFjHSB_1TzuqJQ/exec';
-      
+      // 실제 Google Apps Script URL이 설정되어야만 시스템이 작동합니다
+      const GOOGLE_SCRIPT_URL = ""; // 실제 URL로 변경하세요
+
       // 🔧 자동 새로고침 간격 (밀리초) - 0으로 설정하면 자동 새로고침 비활성화
-      const AUTO_REFRESH_INTERVAL = 300000; // 5분 (300초)
-      
+      const AUTO_REFRESH_INTERVAL = 30000; // 30초
+
       // 🔧 연결 상태 확인 간격 (밀리초)
       const CONNECTION_CHECK_INTERVAL = 10000; // 10초
       // ==================== 수정 가능 구역 끝 ====================
@@ -1046,8 +1098,6 @@
            ======================================== */
       document.addEventListener("DOMContentLoaded", function () {
         console.log("🏥 응급실 게시판 시스템 시작");
-
-        // URL 설정 확인 및 초기화
         initializeSystem();
       });
 
@@ -1059,20 +1109,20 @@
         loadDeletedNotices();
 
         // URL 설정 확인
-        if (GOOGLE_SCRIPT_URL === 'YOUR_GOOGLE_APPS_SCRIPT_URL_HERE' || !GOOGLE_SCRIPT_URL) {
-          console.warn('⚠️ Google Apps Script URL이 설정되지 않았습니다.');
-          showConnectionStatus('offline', 'Google Apps Script URL을 설정해주세요');
-          showMessage('error', 'Google Apps Script URL을 설정해주세요. 코드 상단의 GOOGLE_SCRIPT_URL 변수를 확인하세요.');
+        if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim() === "") {
+          console.warn("⚠️ Google Apps Script URL이 설정되지 않았습니다.");
+          showConnectionStatus("offline", "Google Apps Script URL을 설정해주세요");
+          showSetupGuide();
           return;
         } else {
-          console.log('✅ Google Apps Script URL 설정 확인됨. 온라인 모드로 시작합니다.');
+          console.log("✅ Google Apps Script URL 설정 확인됨. 온라인 모드로 시작합니다.");
           loadNoticesFromGoogle();
-          
+
           // 자동 새로고침 설정
           if (AUTO_REFRESH_INTERVAL > 0) {
             startAutoRefresh();
           }
-          
+
           // 연결 상태 모니터링 시작
           startConnectionMonitoring();
         }
@@ -1081,47 +1131,52 @@
       /* ========================================
            📦 MODULE: 구글 시트 API 통신
            ======================================== */
-      
+
       async function loadNoticesFromGoogle() {
-        showConnectionStatus('loading', '데이터 로드 중...');
-        
+        showConnectionStatus("loading", "데이터 로드 중...");
+
         try {
-          console.log('🔄 Google Sheets 연결 시도:', GOOGLE_SCRIPT_URL);
-          
-          const response = await fetch(`${GOOGLE_SCRIPT_URL}?method=GET&t=${Date.now()}`, {
-            method: 'GET',
-            mode: 'cors',
-            cache: 'no-cache',
-            headers: {
-              'Content-Type': 'application/json',
+          console.log("🔄 Google Sheets 연결 시도:", GOOGLE_SCRIPT_URL);
+
+          const response = await fetch(
+            `${GOOGLE_SCRIPT_URL}?method=GET&t=${Date.now()}`,
+            {
+              method: "GET",
+              mode: "cors",
+              cache: "no-cache",
+              headers: {
+                "Content-Type": "application/json",
+              },
             }
-          });
-          
-          console.log('📡 응답 상태:', response.status, response.statusText);
-          
+          );
+
+          console.log("📡 응답 상태:", response.status, response.statusText);
+
           if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
-          
+
           const data = await response.json();
-          console.log('📊 받은 데이터:', data);
-          
+          console.log("📊 받은 데이터:", data);
+
           if (data.error) {
             throw new Error(data.error);
           }
-          
+
           notices = data.notices || [];
           isOnline = true;
-          showConnectionStatus('online', `연결됨 - ${notices.length}개 공지사항`);
+          showConnectionStatus(
+            "online",
+            `연결됨 - ${notices.length}개 공지사항`
+          );
           displayNotices();
-          
+
           console.log(`✅ 구글 시트에서 ${notices.length}개 공지사항 로드`);
-          
         } catch (error) {
-          console.error('❌ 구글 시트 로드 오류:', error);
+          console.error("❌ 구글 시트 로드 오류:", error);
           isOnline = false;
-          showConnectionStatus('offline', '연결 실패: ' + error.message);
-          
+          showConnectionStatus("offline", "연결 실패: " + error.message);
+
           // 로컬 백업이 있다면 사용
           loadLocalBackup();
         }
@@ -1129,136 +1184,189 @@
 
       async function addNoticeToGoogle(noticeData) {
         try {
-          showConnectionStatus('loading', '저장 중...');
-          
+          showConnectionStatus("loading", "저장 중...");
+
           const formData = new URLSearchParams();
-          formData.append('method', 'POST');
-          formData.append('department', noticeData.department);
-          formData.append('startDate', noticeData.startDate);
-          formData.append('endDate', noticeData.endDate || '');
-          formData.append('content', noticeData.content);
-          formData.append('author', noticeData.author || '');
-          
-          console.log('📤 전송 데이터:', Object.fromEntries(formData));
-          
+          formData.append("method", "POST");
+          formData.append("department", noticeData.department);
+          formData.append("startDate", noticeData.startDate);
+          formData.append("endDate", noticeData.endDate || "");
+          formData.append("content", noticeData.content);
+          formData.append("author", noticeData.author || "");
+
+          console.log("📤 전송 데이터:", Object.fromEntries(formData));
+
           const response = await fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
+            method: "POST",
             body: formData,
-            mode: 'cors',
+            mode: "cors",
             headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            }
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
           });
-          
-          console.log('📡 저장 응답 상태:', response.status, response.statusText);
-          
+
+          console.log(
+            "📡 저장 응답 상태:",
+            response.status,
+            response.statusText
+          );
+
           if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
-          
+
           const result = await response.json();
-          console.log('📊 저장 결과:', result);
-          
+          console.log("📊 저장 결과:", result);
+
           if (result.error) {
             throw new Error(result.error);
           }
-          
-          console.log('✅ 구글 시트에 공지사항 추가:', result);
-          showMessage('success', result.message || '공지사항이 성공적으로 등록되었습니다!');
-          
+
+          console.log("✅ 구글 시트에 공지사항 추가:", result);
+          showMessage(
+            "success",
+            result.message || "공지사항이 성공적으로 등록되었습니다!"
+          );
+
           // 데이터 다시 로드
           setTimeout(async () => {
             await loadNoticesFromGoogle();
-            console.log('🔄 새 공지사항 등록 후 데이터 새로고침 완료');
+            console.log("🔄 새 공지사항 등록 후 데이터 새로고침 완료");
           }, 1000);
-          
+
           clearForm();
           return true;
-          
         } catch (error) {
-          console.error('❌ 구글 시트 추가 오류:', error);
-          showMessage('error', '저장 실패: ' + error.message);
-          showConnectionStatus('offline', '저장 실패');
+          console.error("❌ 구글 시트 추가 오류:", error);
+          showMessage("error", "저장 실패: " + error.message);
+          showConnectionStatus("offline", "저장 실패");
           return false;
         }
       }
 
       async function deleteNoticeFromGoogle(id) {
         try {
-          showConnectionStatus('loading', '삭제 중...');
-          
+          showConnectionStatus("loading", "삭제 중...");
+
           const formData = new URLSearchParams();
-          formData.append('method', 'DELETE');
-          formData.append('id', id);
-          
+          formData.append("method", "DELETE");
+          formData.append("id", id);
+
           const response = await fetch(GOOGLE_SCRIPT_URL, {
-            method: 'POST',
+            method: "POST",
             body: formData,
-            mode: 'cors',
+            mode: "cors",
             headers: {
-              'Content-Type': 'application/x-www-form-urlencoded',
-            }
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
           });
-          
+
           if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
-          
+
           const result = await response.json();
-          
+
           if (result.error) {
             throw new Error(result.error);
           }
-          
-          console.log('✅ 구글 시트에서 공지사항 삭제:', result);
-          showMessage('success', result.message || '공지사항이 삭제되었습니다.');
-          
+
+          console.log("✅ 구글 시트에서 공지사항 삭제:", result);
+          showMessage(
+            "success",
+            result.message || "공지사항이 삭제되었습니다."
+          );
+
           await loadNoticesFromGoogle();
           return true;
-          
         } catch (error) {
-          console.error('❌ 구글 시트 삭제 오류:', error);
-          showMessage('error', '삭제 실패: ' + error.message);
-          showConnectionStatus('offline', '삭제 실패');
+          console.error("❌ 구글 시트 삭제 오류:", error);
+          showMessage("error", "삭제 실패: " + error.message);
+          showConnectionStatus("offline", "삭제 실패");
           return false;
         }
       }
 
       /* ========================================
+           📦 MODULE: 설정 안내 및 도움말
+           ======================================== */
+
+      function showSetupGuide() {
+        const container = document.getElementById("noticesList");
+        container.innerHTML = `
+          <div class="empty-state">
+            <i class="fas fa-cog" style="color: var(--warning);"></i>
+            <h5>Google Apps Script 설정이 필요합니다</h5>
+            <div style="text-align: left; max-width: 600px; margin: 0 auto;">
+              <p><strong>설정 단계:</strong></p>
+              <ol style="padding-left: 1.5rem;">
+                <li>Google Apps Script 프로젝트 생성</li>
+                <li>응급실 게시판용 코드 작성</li>
+                <li>웹 앱으로 배포</li>
+                <li>배포 URL을 코드의 <code>GOOGLE_SCRIPT_URL</code>에 입력</li>
+              </ol>
+              <p style="margin-top: 1rem; padding: 1rem; background: var(--gray-100); border-radius: 8px;">
+                <i class="fas fa-info-circle"></i> 
+                <strong>참고:</strong> URL 설정 후 페이지를 새로고침하면 시스템이 작동합니다.
+              </p>
+            </div>
+          </div>
+        `;
+
+        // 폼 비활성화
+        const submitBtn = document.getElementById("submitBtn");
+        const form = document.getElementById("noticeForm");
+        submitBtn.disabled = true;
+        
+        Array.from(form.elements).forEach(element => {
+          if (element.type !== 'button') {
+            element.disabled = true;
+          }
+        });
+
+        showMessage("error", "Google Apps Script URL을 설정해야 시스템을 사용할 수 있습니다.");
+      }
+
+      /* ========================================
            📦 MODULE: 연결 상태 관리
            ======================================== */
-      
+
       function showConnectionStatus(status, message) {
-        const statusDiv = document.getElementById('connectionStatus');
-        const statusClasses = ['status-online', 'status-offline', 'status-loading'];
-        
+        const statusDiv = document.getElementById("connectionStatus");
+        const statusClasses = [
+          "status-online",
+          "status-offline", 
+          "status-loading"
+        ];
+
         // 기존 상태 클래스 제거
-        statusClasses.forEach(cls => statusDiv.classList.remove(cls));
-        
+        statusClasses.forEach((cls) => statusDiv.classList.remove(cls));
+
         // 새 상태 적용
         statusDiv.classList.add(`status-${status}`);
-        
+
         const icons = {
-          online: 'fas fa-check-circle',
-          offline: 'fas fa-exclamation-circle',
-          loading: 'fas fa-spinner fa-spin'
+          online: "fas fa-check-circle",
+          offline: "fas fa-exclamation-circle",
+          loading: "fas fa-spinner fa-spin"
         };
-        
+
         statusDiv.innerHTML = `<i class="${icons[status]}"></i> ${message}`;
-        
+
         // 상태에 따른 UI 업데이트
-        const submitBtn = document.getElementById('submitBtn');
-        const refreshBtn = document.getElementById('refreshBtn');
-        
-        if (status === 'offline') {
+        const submitBtn = document.getElementById("submitBtn");
+        const refreshBtn = document.getElementById("refreshBtn");
+
+        if (status === "offline") {
           submitBtn.disabled = true;
         } else {
           submitBtn.disabled = false;
         }
-        
-        if (status === 'loading') {
+
+        if (status === "loading") {
           refreshBtn.disabled = true;
-          refreshBtn.innerHTML = '<div class="loading-spinner"></div> 로딩 중...';
+          refreshBtn.innerHTML =
+            '<div class="loading-spinner"></div> 로딩 중...';
         } else {
           refreshBtn.disabled = false;
           refreshBtn.innerHTML = '<i class="fas fa-sync-alt"></i> 새로고침';
@@ -1268,20 +1376,22 @@
       function startConnectionMonitoring() {
         connectionCheckTimer = setInterval(async () => {
           try {
-            const response = await fetch(`${GOOGLE_SCRIPT_URL}?method=GET&t=${Date.now()}`);
+            const response = await fetch(
+              `${GOOGLE_SCRIPT_URL}?method=GET&t=${Date.now()}`
+            );
             if (response.ok) {
               if (!isOnline) {
                 isOnline = true;
-                showConnectionStatus('online', '연결 복구됨');
+                showConnectionStatus("online", "연결 복구됨");
                 await loadNoticesFromGoogle();
               }
             } else {
-              throw new Error('연결 실패');
+              throw new Error("연결 실패");
             }
           } catch (error) {
             if (isOnline) {
               isOnline = false;
-              showConnectionStatus('offline', '연결 끊어짐');
+              showConnectionStatus("offline", "연결 끊어짐");
             }
           }
         }, CONNECTION_CHECK_INTERVAL);
@@ -1290,7 +1400,7 @@
       function startAutoRefresh() {
         autoRefreshTimer = setInterval(async () => {
           if (isOnline) {
-            console.log('🔄 자동 새로고침 실행');
+            console.log("🔄 자동 새로고침 실행");
             await loadNoticesFromGoogle();
           }
         }, AUTO_REFRESH_INTERVAL);
@@ -1299,35 +1409,40 @@
       /* ========================================
            📦 MODULE: 로컬 백업 관리
            ======================================== */
-      
+
       function saveLocalBackup() {
         try {
           const backupData = {
             notices: notices,
             timestamp: new Date().toISOString(),
-            source: 'google_sheets'
+            source: isDemoMode ? "demo_mode" : "google_sheets",
           };
-          localStorage.setItem('erNoticesBackup', JSON.stringify(backupData));
-          console.log('💾 로컬 백업 저장');
+          localStorage.setItem("erNoticesBackup", JSON.stringify(backupData));
+          console.log("💾 로컬 백업 저장");
         } catch (error) {
-          console.error('❌ 로컬 백업 저장 오류:', error);
+          console.error("❌ 로컬 백업 저장 오류:", error);
         }
       }
 
       function loadLocalBackup() {
         try {
-          const backup = localStorage.getItem('erNoticesBackup');
+          const backup = localStorage.getItem("erNoticesBackup");
           if (backup) {
             const backupData = JSON.parse(backup);
             notices = backupData.notices || [];
             displayNotices();
-            showMessage('error', `오프라인 모드: 마지막 백업 데이터를 표시합니다 (${new Date(backupData.timestamp).toLocaleString('ko-KR')})`);
-            console.log('📋 로컬 백업에서 데이터 로드');
+            showMessage(
+              "error",
+              `오프라인 모드: 마지막 백업 데이터를 표시합니다 (${new Date(
+                backupData.timestamp
+              ).toLocaleString("ko-KR")})`
+            );
+            console.log("📋 로컬 백업에서 데이터 로드");
           } else {
             displayEmptyState();
           }
         } catch (error) {
-          console.error('❌ 로컬 백업 로드 오류:', error);
+          console.error("❌ 로컬 백업 로드 오류:", error);
           displayEmptyState();
         }
       }
@@ -1335,7 +1450,7 @@
       /* ========================================
            📦 MODULE: 기존 함수들 (수정됨)
            ======================================== */
-      
+
       function initializeDates() {
         const today = new Date().toISOString().split("T")[0];
         document.getElementById("startDate").value = today;
@@ -1362,8 +1477,12 @@
           await addNotice();
         });
 
-        document.getElementById("startDate").addEventListener("change", validateDates);
-        document.getElementById("endDate").addEventListener("change", validateDates);
+        document
+          .getElementById("startDate")
+          .addEventListener("change", validateDates);
+        document
+          .getElementById("endDate")
+          .addEventListener("change", validateDates);
       }
 
       function validateDates() {
@@ -1380,7 +1499,7 @@
         const formData = {
           department: document.getElementById("department").value,
           startDate: document.getElementById("startDate").value,
-          endDate: document.getElementById("endDate").value || '',
+          endDate: document.getElementById("endDate").value || "",
           content: document.getElementById("content").value.trim(),
           author: document.getElementById("author").value.trim(),
         };
@@ -1390,11 +1509,11 @@
           return;
         }
 
-        console.log('📝 새 공지사항 등록 시도:', formData);
+        console.log("📝 새 공지사항 등록 시도:", formData);
 
         const success = await addNoticeToGoogle(formData);
         if (success) {
-          console.log('✅ 공지사항 등록 완료');
+          console.log("✅ 공지사항 등록 완료");
         }
       }
 
@@ -1405,21 +1524,28 @@
       function showMessage(type, message) {
         const successDiv = document.getElementById("successMessage");
         const errorDiv = document.getElementById("errorMessage");
+        const infoDiv = document.getElementById("infoMessage");
         const successText = document.getElementById("successText");
         const errorText = document.getElementById("errorText");
+        const infoText = document.getElementById("infoText");
 
         // 모든 메시지 숨기기
         successDiv.style.display = "none";
         errorDiv.style.display = "none";
+        infoDiv.style.display = "none";
 
         if (type === "success") {
           successText.textContent = message;
           successDiv.style.display = "block";
           setTimeout(() => (successDiv.style.display = "none"), 5000);
-        } else {
+        } else if (type === "error") {
           errorText.textContent = message;
           errorDiv.style.display = "block";
           setTimeout(() => (errorDiv.style.display = "none"), 8000);
+        } else if (type === "info") {
+          infoText.textContent = message;
+          infoDiv.style.display = "block";
+          setTimeout(() => (infoDiv.style.display = "none"), 10000);
         }
       }
 
@@ -1462,22 +1588,40 @@
 
       function createNoticeHTML(notice) {
         const departmentColors = {
-          GI: "#10b981", CV: "#ef4444", Biliary: "#f59e0b",
-          DR: "#6366f1", NS: "#8b5cf6", GS: "#06b6d4", PLM: "#84cc16",
+          GI: "#10b981",
+          CV: "#ef4444",
+          Biliary: "#f59e0b",
+          DR: "#6366f1",
+          NS: "#8b5cf6",
+          GS: "#06b6d4",
+          PLM: "#84cc16",
         };
 
         const departmentIcons = {
-          GI: "fas fa-stomach", CV: "fas fa-heartbeat", Biliary: "fas fa-liver",
-          DR: "fas fa-x-ray", NS: "fas fa-brain", GS: "fas fa-cut", PLM: "fas fa-lungs",
+          GI: "fas fa-stomach",
+          CV: "fas fa-heartbeat",
+          Biliary: "fas fa-liver",
+          DR: "fas fa-x-ray",
+          NS: "fas fa-brain",
+          GS: "fas fa-cut",
+          PLM: "fas fa-lungs",
         };
 
         const bgColor = departmentColors[notice.department] || "#4f46e5";
         const icon = departmentIcons[notice.department] || "fas fa-hospital";
 
-        const startDate = new Date(notice.startDate).toLocaleDateString('ko-KR', {month: 'short', day: 'numeric'});
-        const endDateText = notice.endDate ? 
-          ` ~ ${new Date(notice.endDate).toLocaleDateString('ko-KR', {month: 'short', day: 'numeric'})}` : 
-          ' (무기한)';
+        const startDate = new Date(notice.startDate).toLocaleDateString(
+          "ko-KR",
+          { month: "short", day: "numeric" }
+        );
+        const endDateText = notice.endDate
+          ? ` ~ ${new Date(notice.endDate).toLocaleDateString("ko-KR", {
+              month: "short",
+              day: "numeric",
+            })}`
+          : " (무기한)";
+
+        const deleteButtonEnabled = isOnline;
 
         return `
           <div class="notice-item" data-id="${notice.id}">
@@ -1493,8 +1637,14 @@
             </div>
             <div class="notice-right">
               <span class="notice-dates">${startDate}${endDateText}</span>
-              ${notice.author ? `<span class="notice-author">${notice.author}</span>` : ""}
-              <button class="er-btn-danger-small notice-delete-btn" onclick="deleteNotice('${notice.id}')" title="삭제" ${!isOnline ? 'disabled' : ''}>
+              ${
+                notice.author
+                  ? `<span class="notice-author">${notice.author}</span>`
+                  : ""
+              }
+              <button class="er-btn-danger-small notice-delete-btn" onclick="deleteNotice('${
+                notice.id
+              }')" title="삭제" ${!deleteButtonEnabled ? "disabled" : ""}>
                 <i class="fas fa-trash"></i>
               </button>
             </div>
@@ -1504,17 +1654,20 @@
 
       function getFilteredNotices() {
         const filterDate = document.getElementById("filterDate").value;
-        const filterDepartment = document.getElementById("filterDepartment").value;
+        const filterDepartment =
+          document.getElementById("filterDepartment").value;
 
         return notices
           .filter((notice) => {
-            const currentDate = filterDate || new Date().toISOString().split("T")[0];
-            
-            const isDateInRange = notice.endDate ? 
-              (currentDate >= notice.startDate && currentDate <= notice.endDate) :
-              (currentDate >= notice.startDate);
-              
-            const isDepartmentMatch = !filterDepartment || notice.department === filterDepartment;
+            const currentDate =
+              filterDate || new Date().toISOString().split("T")[0];
+
+            const isDateInRange = notice.endDate
+              ? currentDate >= notice.startDate && currentDate <= notice.endDate
+              : currentDate >= notice.startDate;
+
+            const isDepartmentMatch =
+              !filterDepartment || notice.department === filterDepartment;
             return isDateInRange && isDepartmentMatch;
           })
           .sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
@@ -1526,23 +1679,23 @@
 
       async function deleteNotice(id) {
         if (!isOnline) {
-          showMessage('error', '오프라인 상태에서는 삭제할 수 없습니다.');
+          showMessage("error", "오프라인 상태에서는 삭제할 수 없습니다.");
           return;
         }
 
         if (confirm("이 공지사항을 삭제하시겠습니까?")) {
           // 삭제 전 히스토리에 저장
-          const noticeToDelete = notices.find(n => n.id === id);
+          const noticeToDelete = notices.find((n) => n.id === id);
           if (noticeToDelete) {
             const deletedNotice = {
               ...noticeToDelete,
               deletedAt: new Date().toISOString(),
-              deletedBy: 'system'
+              deletedBy: "system",
             };
             deletedNotices.push(deletedNotice);
             saveDeletedNotices();
           }
-          
+
           await deleteNoticeFromGoogle(id);
         }
       }
@@ -1550,36 +1703,44 @@
       /* ========================================
            📦 MODULE: 새로 추가된 기능들
            ======================================== */
-      
+
       function loadBackupData() {
         try {
-          const backup = localStorage.getItem('erNoticesBackup');
+          const backup = localStorage.getItem("erNoticesBackup");
           if (!backup) {
-            showMessage('error', '저장된 백업 데이터가 없습니다.');
+            showMessage("error", "저장된 백업 데이터가 없습니다.");
             return;
           }
-          
+
           const backupData = JSON.parse(backup);
           notices = backupData.notices || [];
           displayNotices();
-          
-          const backupTime = new Date(backupData.timestamp).toLocaleString('ko-KR');
-          showMessage('success', `백업 데이터를 불러왔습니다. (백업 시간: ${backupTime})`);
-          console.log('📋 백업 데이터 로드 완료');
-          
+
+          const backupTime = new Date(backupData.timestamp).toLocaleString(
+            "ko-KR"
+          );
+          showMessage(
+            "success",
+            `백업 데이터를 불러왔습니다. (백업 시간: ${backupTime})`
+          );
+          console.log("📋 백업 데이터 로드 완료");
         } catch (error) {
-          console.error('❌ 백업 데이터 로드 오류:', error);
-          showMessage('error', '백업 데이터를 불러오는 중 오류가 발생했습니다.');
+          console.error("❌ 백업 데이터 로드 오류:", error);
+          showMessage(
+            "error",
+            "백업 데이터를 불러오는 중 오류가 발생했습니다."
+          );
         }
       }
 
       function showAllNotices() {
-        const modal = document.getElementById('allNoticesModal');
-        const container = document.getElementById('allNoticesList');
-        
-        const allNotices = notices
-          .sort((a, b) => new Date(a.startDate) - new Date(b.startDate));
-        
+        const modal = document.getElementById("allNoticesModal");
+        const container = document.getElementById("allNoticesList");
+
+        const allNotices = notices.sort(
+          (a, b) => new Date(a.startDate) - new Date(b.startDate)
+        );
+
         if (allNotices.length === 0) {
           container.innerHTML = `
             <div class="empty-state">
@@ -1595,17 +1756,17 @@
           });
           container.innerHTML = html;
         }
-        
-        modal.style.display = 'flex';
+
+        modal.style.display = "flex";
         console.log(`📋 전체 공지사항 표시: ${allNotices.length}개`);
       }
 
       function showHistory() {
-        const modal = document.getElementById('historyModal');
-        const container = document.getElementById('historyList');
-        
+        const modal = document.getElementById("historyModal");
+        const container = document.getElementById("historyList");
+
         loadDeletedNotices();
-        
+
         if (deletedNotices.length === 0) {
           container.innerHTML = `
             <div class="empty-state">
@@ -1623,30 +1784,48 @@
             });
           container.innerHTML = html;
         }
-        
-        modal.style.display = 'flex';
+
+        modal.style.display = "flex";
         console.log(`🗂️ 삭제 히스토리 표시: ${deletedNotices.length}개`);
       }
 
       function createHistoryNoticeHTML(notice) {
         const departmentColors = {
-          GI: "#10b981", CV: "#ef4444", Biliary: "#f59e0b",
-          DR: "#6366f1", NS: "#8b5cf6", GS: "#06b6d4", PLM: "#84cc16",
+          GI: "#10b981",
+          CV: "#ef4444",
+          Biliary: "#f59e0b",
+          DR: "#6366f1",
+          NS: "#8b5cf6",
+          GS: "#06b6d4",
+          PLM: "#84cc16",
         };
 
         const departmentIcons = {
-          GI: "fas fa-stomach", CV: "fas fa-heartbeat", Biliary: "fas fa-liver",
-          DR: "fas fa-x-ray", NS: "fas fa-brain", GS: "fas fa-cut", PLM: "fas fa-lungs",
+          GI: "fas fa-stomach",
+          CV: "fas fa-heartbeat",
+          Biliary: "fas fa-liver",
+          DR: "fas fa-x-ray",
+          NS: "fas fa-brain",
+          GS: "fas fa-cut",
+          PLM: "fas fa-lungs",
         };
 
         const bgColor = departmentColors[notice.department] || "#4f46e5";
         const icon = departmentIcons[notice.department] || "fas fa-hospital";
-        
-        const deletedTime = new Date(notice.deletedAt).toLocaleString('ko-KR');
-        const startDate = new Date(notice.startDate).toLocaleDateString('ko-KR', {month: 'short', day: 'numeric'});
-        const endDateText = notice.endDate ? 
-          ` ~ ${new Date(notice.endDate).toLocaleDateString('ko-KR', {month: 'short', day: 'numeric'})}` : 
-          ' (무기한)';
+
+        const deletedTime = new Date(notice.deletedAt).toLocaleString("ko-KR");
+        const startDate = new Date(notice.startDate).toLocaleDateString(
+          "ko-KR",
+          { month: "short", day: "numeric" }
+        );
+        const endDateText = notice.endDate
+          ? ` ~ ${new Date(notice.endDate).toLocaleDateString("ko-KR", {
+              month: "short",
+              day: "numeric",
+            })}`
+          : " (무기한)";
+
+        const restoreButtonEnabled = isOnline;
 
         return `
           <div class="notice-item" style="opacity: 0.7; border-left: 4px solid var(--danger);">
@@ -1663,7 +1842,11 @@
             <div class="notice-right">
               <span class="notice-dates">${startDate}${endDateText}</span>
               <span class="notice-author" style="color: var(--danger);">삭제: ${deletedTime}</span>
-              <button class="er-btn er-btn-outline" onclick="restoreNotice('${notice.id}')" title="복원" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;" ${!isOnline ? 'disabled' : ''}>
+              <button class="er-btn er-btn-outline" onclick="restoreNotice('${
+                notice.id
+              }')" title="복원" style="font-size: 0.7rem; padding: 0.2rem 0.5rem;" ${
+          !restoreButtonEnabled ? "disabled" : ""
+        }>
                 <i class="fas fa-undo"></i> 복원
               </button>
             </div>
@@ -1673,13 +1856,13 @@
 
       async function restoreNotice(id) {
         if (!isOnline) {
-          showMessage('error', '오프라인 상태에서는 복원할 수 없습니다.');
+          showMessage("error", "오프라인 상태에서는 복원할 수 없습니다.");
           return;
         }
 
-        const deletedNotice = deletedNotices.find(n => n.id === id);
+        const deletedNotice = deletedNotices.find((n) => n.id === id);
         if (!deletedNotice) {
-          showMessage('error', '복원할 공지사항을 찾을 수 없습니다.');
+          showMessage("error", "복원할 공지사항을 찾을 수 없습니다.");
           return;
         }
 
@@ -1687,94 +1870,104 @@
           const restoreData = {
             department: deletedNotice.department,
             startDate: deletedNotice.startDate,
-            endDate: deletedNotice.endDate || '',
+            endDate: deletedNotice.endDate || "",
             content: deletedNotice.content,
-            author: deletedNotice.author || ''
+            author: deletedNotice.author || "",
           };
 
           const success = await addNoticeToGoogle(restoreData);
           if (success) {
-            deletedNotices = deletedNotices.filter(n => n.id !== id);
+            deletedNotices = deletedNotices.filter((n) => n.id !== id);
             saveDeletedNotices();
-            
-            closeModal('historyModal');
-            showMessage('success', '공지사항이 복원되었습니다.');
+
+            closeModal("historyModal");
+            showMessage("success", "공지사항이 복원되었습니다.");
           }
         }
       }
 
       function closeModal(modalId) {
-        document.getElementById(modalId).style.display = 'none';
+        document.getElementById(modalId).style.display = "none";
       }
 
       function saveDeletedNotices() {
         try {
-          localStorage.setItem('erDeletedNotices', JSON.stringify(deletedNotices));
-          console.log('💾 삭제 히스토리 저장');
+          localStorage.setItem(
+            "erDeletedNotices",
+            JSON.stringify(deletedNotices)
+          );
+          console.log("💾 삭제 히스토리 저장");
         } catch (error) {
-          console.error('❌ 삭제 히스토리 저장 오류:', error);
+          console.error("❌ 삭제 히스토리 저장 오류:", error);
         }
       }
 
       function loadDeletedNotices() {
         try {
-          const saved = localStorage.getItem('erDeletedNotices');
+          const saved = localStorage.getItem("erDeletedNotices");
           if (saved) {
             deletedNotices = JSON.parse(saved);
             console.log(`📂 삭제 히스토리 로드: ${deletedNotices.length}개`);
           }
         } catch (error) {
-          console.error('❌ 삭제 히스토리 로드 오류:', error);
+          console.error("❌ 삭제 히스토리 로드 오류:", error);
           deletedNotices = [];
         }
       }
 
       async function refreshNotices() {
-        console.log('🔄 수동 새로고침 실행');
+        console.log("🔄 수동 새로고침 실행");
         await loadNoticesFromGoogle();
       }
 
       function exportToday() {
         const today = new Date().toISOString().split("T")[0];
         const todayNotices = notices.filter((notice) => {
-          return notice.endDate ? 
-            (today >= notice.startDate && today <= notice.endDate) :
-            (today >= notice.startDate);
+          return notice.endDate
+            ? today >= notice.startDate && today <= notice.endDate
+            : today >= notice.startDate;
         });
 
         if (todayNotices.length === 0) {
-          showMessage('error', '오늘 표시할 공지사항이 없습니다.');
+          showMessage("error", "오늘 표시할 공지사항이 없습니다.");
           return;
         }
 
         // CSV 형태로 내보내기
         let csvContent = "진료과,시작날짜,종료날짜,내용,작성자,등록일시\n";
-        
-        todayNotices.forEach(notice => {
+
+        todayNotices.forEach((notice) => {
           const row = [
             notice.department,
             notice.startDate,
-            notice.endDate || '',
-            `"${notice.content.replace(/"/g, '""').replace(/\n/g, ' ')}"`,
-            notice.author || '',
-            new Date(notice.createdAt).toLocaleString('ko-KR')
-          ].join(',');
+            notice.endDate || "",
+            `"${notice.content.replace(/"/g, '""').replace(/\n/g, " ")}"`,
+            notice.author || "",
+            new Date(notice.createdAt).toLocaleString("ko-KR"),
+          ].join(",");
           csvContent += row + "\n";
         });
 
         // 파일 다운로드
-        const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+        const blob = new Blob([csvContent], {
+          type: "text/csv;charset=utf-8;",
+        });
         const link = document.createElement("a");
         const url = URL.createObjectURL(blob);
         link.setAttribute("href", url);
         link.setAttribute("download", `응급실_공지사항_${today}.csv`);
-        link.style.visibility = 'hidden';
+        link.style.visibility = "hidden";
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
-        
-        showMessage('success', `오늘의 공지사항 ${todayNotices.length}개를 내보냈습니다.`);
-        console.log(`📊 오늘의 공지사항 ${todayNotices.length}개 내보내기 완료`);
+
+        showMessage(
+          "success",
+          `오늘의 공지사항 ${todayNotices.length}개를 내보냈습니다.`
+        );
+        console.log(
+          `📊 오늘의 공지사항 ${todayNotices.length}개 내보내기 완료`
+        );
       }
     </script>
   </body>
