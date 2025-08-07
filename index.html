@@ -1,4 +1,4 @@
-// ==================== 기타 함수들 ====================<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
@@ -533,6 +533,36 @@
               >
                 <i class="fas fa-lungs"></i> PLM
               </button>
+              <button
+                class="er-btn er-btn-outline"
+                onclick="filterByDepartment('OS')"
+                id="filter-OS"
+              >
+                <i class="fas fa-bone"></i> OS
+              </button>
+              <button
+                class="er-btn er-btn-outline"
+                onclick="filterByDepartment('NPH')"
+                id="filter-NPH"
+              >
+                <i class="fas fa-brain"></i> NPH
+              </button>
+              <button
+                class="er-btn er-btn-outline"
+                onclick="filterByDepartment('CS')"
+                id="filter-CS"
+              >
+                <i class="fas fa-cut"></i> CS
+              </button>
+              <button
+                class="er-btn er-btn-outline"
+                onclick="filterByDepartment('URO')"
+                id="filter-URO"
+              >
+                <i class="fas fa-kidneys"></i> URO
+              </button>
+              <!-- 동적으로 추가되는 기타 진료과 버튼들 -->
+              <div id="customDepartmentButtons"></div>
             </div>
           </div>
 
@@ -572,7 +602,12 @@
                 <label class="er-form-label"
                   >진료과 <span style="color: var(--danger)">*</span></label
                 >
-                <select class="er-form-control" id="department" required>
+                <select
+                  class="er-form-control"
+                  id="department"
+                  required
+                  onchange="handleDepartmentChange()"
+                >
                   <option value="">선택하세요</option>
                   <option value="GI">GI</option>
                   <option value="CV">CV</option>
@@ -581,7 +616,21 @@
                   <option value="NS">NS</option>
                   <option value="GS">GS</option>
                   <option value="PLM">PLM</option>
+                  <option value="OS">OS</option>
+                  <option value="NPH">NPH</option>
+                  <option value="CS">CS</option>
+                  <option value="URO">URO</option>
+                  <option value="OTHER">기타 (직접 입력)</option>
                 </select>
+                <!-- 기타 진료과 입력 필드 -->
+                <input
+                  type="text"
+                  class="er-form-control"
+                  id="customDepartment"
+                  placeholder="진료과명을 입력하세요 (예: OBGY, ENT 등)"
+                  style="display: none; margin-top: 0.5rem"
+                  maxlength="10"
+                />
               </div>
               <div class="col-md-4">
                 <label class="er-form-label"
@@ -654,6 +703,7 @@
       let isOnline = false;
       let currentViewMode = "today"; // 'today', 'all', 'history'
       let currentFilter = "all"; // 현재 과별 필터
+      let customDepartments = new Set(); // 사용자 정의 진료과 저장
       let autoRefreshTimer = null;
 
       // ==================== 초기화 ====================
@@ -670,6 +720,9 @@
         currentViewMode = "today";
         currentFilter = "all";
         updateViewButtons();
+
+        // 저장된 사용자 정의 진료과 불러오기
+        loadCustomDepartments();
 
         console.log("🔗 Google Apps Script URL:", GOOGLE_SCRIPT_URL);
         loadNoticesFromGoogle();
@@ -742,8 +795,35 @@
             "online",
             `연결됨 - ${notices.length}개 공지사항`
           );
-          displayNotices();
 
+          // 공지사항에서 사용된 사용자 정의 진료과 자동 감지 및 추가
+          notices.forEach((notice) => {
+            if (
+              notice.department &&
+              ![
+                "GI",
+                "CV",
+                "Biliary",
+                "DR",
+                "NS",
+                "GS",
+                "PLM",
+                "OS",
+                "NPH",
+                "CS",
+                "URO",
+              ].includes(notice.department)
+            ) {
+              customDepartments.add(notice.department);
+            }
+          });
+
+          if (customDepartments.size > 0) {
+            saveCustomDepartments();
+            updateCustomDepartmentButtons();
+          }
+
+          displayNotices();
           console.log(`✅ ${notices.length}개 공지사항 로드 완료`);
         } catch (error) {
           console.error("❌ 연결 오류:", error);
@@ -932,7 +1012,137 @@
         }
       }
 
-      // ==================== 과별 필터링 ====================
+      // ==================== 사용자 정의 진료과 관리 ====================
+
+      /**
+       * 진료과 선택 변경 처리
+       */
+      function handleDepartmentChange() {
+        const departmentSelect = document.getElementById("department");
+        const customDepartmentInput =
+          document.getElementById("customDepartment");
+
+        if (departmentSelect.value === "OTHER") {
+          customDepartmentInput.style.display = "block";
+          customDepartmentInput.required = true;
+          customDepartmentInput.focus();
+        } else {
+          customDepartmentInput.style.display = "none";
+          customDepartmentInput.required = false;
+          customDepartmentInput.value = "";
+        }
+      }
+
+      /**
+       * 사용자 정의 진료과를 로컬 스토리지에서 불러오기
+       */
+      function loadCustomDepartments() {
+        try {
+          const saved = localStorage.getItem("customDepartments");
+          if (saved) {
+            customDepartments = new Set(JSON.parse(saved));
+            updateCustomDepartmentButtons();
+            console.log(
+              `📋 사용자 정의 진료과 로드: ${customDepartments.size}개`
+            );
+          }
+        } catch (error) {
+          console.error("사용자 정의 진료과 로드 오류:", error);
+          customDepartments = new Set();
+        }
+      }
+
+      /**
+       * 사용자 정의 진료과를 로컬 스토리지에 저장
+       */
+      function saveCustomDepartments() {
+        try {
+          localStorage.setItem(
+            "customDepartments",
+            JSON.stringify([...customDepartments])
+          );
+          console.log(
+            `💾 사용자 정의 진료과 저장: ${customDepartments.size}개`
+          );
+        } catch (error) {
+          console.error("사용자 정의 진료과 저장 오류:", error);
+        }
+      }
+
+      /**
+       * 새로운 사용자 정의 진료과 추가
+       */
+      function addCustomDepartment(departmentName) {
+        if (!departmentName || departmentName.trim() === "") {
+          return false;
+        }
+
+        const cleanName = departmentName.trim().toUpperCase();
+
+        // 기존 표준 진료과와 중복 확인
+        const standardDepartments = [
+          "GI",
+          "CV",
+          "BILIARY",
+          "DR",
+          "NS",
+          "GS",
+          "PLM",
+          "OS",
+          "NPH",
+          "CS",
+          "URO",
+        ];
+        if (standardDepartments.includes(cleanName)) {
+          showMessage(
+            "info",
+            `${cleanName}는 이미 표준 진료과에 있습니다. 드롭다운에서 선택해주세요.`
+          );
+          return false;
+        }
+
+        // 길이 제한 (10자)
+        if (cleanName.length > 10) {
+          showMessage("error", "진료과명은 10자 이내로 입력해주세요.");
+          return false;
+        }
+
+        // 특수문자 제한 (영문, 숫자만 허용)
+        if (!/^[A-Z0-9]+$/.test(cleanName)) {
+          showMessage(
+            "error",
+            "진료과명은 영문 대문자와 숫자만 사용 가능합니다."
+          );
+          return false;
+        }
+
+        customDepartments.add(cleanName);
+        saveCustomDepartments();
+        updateCustomDepartmentButtons();
+
+        showMessage("success", `새 진료과 '${cleanName}'가 추가되었습니다.`);
+        console.log(`➕ 새 진료과 추가: ${cleanName}`);
+
+        return true;
+      }
+
+      /**
+       * 사용자 정의 진료과 필터 버튼 업데이트
+       */
+      function updateCustomDepartmentButtons() {
+        const container = document.getElementById("customDepartmentButtons");
+        container.innerHTML = "";
+
+        customDepartments.forEach((dept) => {
+          const button = document.createElement("button");
+          button.className = "er-btn er-btn-outline";
+          button.id = `filter-${dept}`;
+          button.onclick = () => filterByDepartment(dept);
+          button.innerHTML = `<i class="fas fa-hospital"></i> ${dept}`;
+          container.appendChild(button);
+        });
+      }
+
       function filterByDepartment(department) {
         currentFilter = department;
 
@@ -1048,6 +1258,10 @@
           NS: "#8b5cf6",
           GS: "#06b6d4",
           PLM: "#84cc16",
+          OS: "#f97316", // 정형외과 - 주황색
+          NPH: "#8b5cf6", // 신경외과 - 보라색 (NS와 구분)
+          CS: "#06b6d4", // 심장외과 - 청록색 (GS와 구분)
+          URO: "#eab308", // 비뇨기과 - 노란색
         };
 
         const departmentIcons = {
@@ -1058,9 +1272,14 @@
           NS: "fas fa-brain",
           GS: "fas fa-cut",
           PLM: "fas fa-lungs",
+          OS: "fas fa-bone",
+          NPH: "fas fa-brain",
+          CS: "fas fa-heart",
+          URO: "fas fa-kidneys",
         };
 
-        const bgColor = departmentColors[notice.department] || "#4f46e5";
+        // 사용자 정의 진료과는 기본 색상과 아이콘 사용
+        const bgColor = departmentColors[notice.department] || "#6366f1";
         const icon = departmentIcons[notice.department] || "fas fa-hospital";
 
         const startDate = new Date(notice.startDate).toLocaleDateString(
@@ -1133,50 +1352,6 @@
             return notice.endDate && today > notice.endDate;
           })
           .sort((a, b) => new Date(b.endDate) - new Date(a.endDate)); // 종료일 역순으로 정렬
-      }
-
-      // ==================== 폼 관리 ====================
-      function initializeDates() {
-        const today = new Date().toISOString().split("T")[0];
-        document.getElementById("startDate").value = today;
-      }
-
-      function setupFormEventListeners() {
-        document
-          .getElementById("noticeForm")
-          .addEventListener("submit", async function (e) {
-            e.preventDefault();
-            await addNotice();
-          });
-      }
-
-      async function addNotice() {
-        const formData = {
-          department: document.getElementById("department").value,
-          startDate: document.getElementById("startDate").value,
-          endDate: document.getElementById("endDate").value || "",
-          content: document.getElementById("content").value.trim(),
-          author: document.getElementById("author").value.trim(),
-        };
-
-        if (!formData.department || !formData.startDate || !formData.content) {
-          showMessage("error", "필수 항목을 모두 입력해주세요.");
-          return;
-        }
-
-        console.log("📝 새 공지사항 등록:", formData);
-        await addNoticeToGoogle(formData);
-      }
-
-      function clearForm() {
-        document.getElementById("noticeForm").reset();
-        initializeDates();
-      }
-
-      async function deleteNotice(id) {
-        if (confirm("이 공지사항을 삭제하시겠습니까?")) {
-          await deleteNoticeFromGoogle(id);
-        }
       }
 
       // ==================== 백업/불러오기 기능 ====================
@@ -1456,6 +1631,77 @@
           return false;
         }
       }
+
+      // ==================== 폼 관리 ====================
+      function initializeDates() {
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("startDate").value = today;
+      }
+
+      function setupFormEventListeners() {
+        document
+          .getElementById("noticeForm")
+          .addEventListener("submit", async function (e) {
+            e.preventDefault();
+            await addNotice();
+          });
+      }
+
+      async function addNotice() {
+        const departmentSelect = document.getElementById("department");
+        const customDepartmentInput =
+          document.getElementById("customDepartment");
+
+        let departmentValue = departmentSelect.value;
+
+        // 기타 진료과 선택 시 사용자 입력값 사용
+        if (departmentValue === "OTHER") {
+          const customValue = customDepartmentInput.value.trim();
+          if (!customValue) {
+            showMessage("error", "진료과명을 입력해주세요.");
+            customDepartmentInput.focus();
+            return;
+          }
+
+          // 사용자 정의 진료과 추가
+          const added = addCustomDepartment(customValue);
+          if (!added) {
+            return; // 추가 실패 시 종료
+          }
+
+          departmentValue = customValue.trim().toUpperCase();
+        }
+
+        const formData = {
+          department: departmentValue,
+          startDate: document.getElementById("startDate").value,
+          endDate: document.getElementById("endDate").value || "",
+          content: document.getElementById("content").value.trim(),
+          author: document.getElementById("author").value.trim(),
+        };
+
+        if (!formData.department || !formData.startDate || !formData.content) {
+          showMessage("error", "필수 항목을 모두 입력해주세요.");
+          return;
+        }
+
+        console.log("📝 새 공지사항 등록:", formData);
+        await addNoticeToGoogle(formData);
+      }
+
+      function clearForm() {
+        document.getElementById("noticeForm").reset();
+        document.getElementById("customDepartment").style.display = "none";
+        document.getElementById("customDepartment").required = false;
+        initializeDates();
+      }
+
+      async function deleteNotice(id) {
+        if (confirm("이 공지사항을 삭제하시겠습니까?")) {
+          await deleteNoticeFromGoogle(id);
+        }
+      }
+
       function refreshNotices() {
         currentViewMode = "today";
         currentFilter = "all";
