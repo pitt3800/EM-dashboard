@@ -1200,7 +1200,7 @@
 
 function doPost(e) {
   try {
-    const sheet = SpreadsheetApp.openById('https://docs.google.com/spreadsheets/d/1Ev6UnsN-6cd3wIUxobIaBFVn1RTvDBdB7YoRnLXT2Jc'); 
+    const sheet = SpreadsheetApp.openById('1Ev6UnsN-6cd3wIUxobIaBFVn1RTvDBdB7YoRnLXT2Jc'); 
     // 🔧 여기에 스프레드시트 ID 입력
     const dataSheet = sheet.getActiveSheet();
     
@@ -1329,17 +1329,16 @@ function doPost(e) {
       // 🔧 Google Apps Script 웹 앱 URL을 여기에 입력하세요
       // 실제 Google Apps Script URL이 설정되어야만 시스템이 작동합니다
       const GOOGLE_SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbwq2tLNNh4TdpJXgNc1sYyytqsev3NLHfCjclYZWSPlovKVRaQtjaL03itFomPUJPCE/exec";
-      // 여기에 실제 Google Apps Script URL 입력
+        "https://script.google.com/macros/s/AKfycbw9drbE3k7jiwiLh3SppnTy9KHP3xOxQ67cc_mpNWAhD1J53FjtMD50Y0BPo_cBuOtu/exec";
+
+      // 🔧 스프레드시트 ID - 이미 코드에 반영되어 있음
+      const SPREADSHEET_ID = "1Ev6UnsN-6cd3wIUxobIaBFVn1RTvDBdB7YoRnLXT2Jc";
 
       // 🔧 자동 새로고침 간격 (밀리초) - 0으로 설정하면 자동 새로고침 비활성화
       const AUTO_REFRESH_INTERVAL = 30000; // 30초
 
       // 🔧 연결 상태 확인 간격 (밀리초)
       const CONNECTION_CHECK_INTERVAL = 10000; // 10초
-
-      // 🔧 데모 모드 활성화 여부
-      let DEMO_MODE = false;
       // ==================== 수정 가능 구역 끝 ====================
 
       let notices = []; // 공지사항 저장 배열
@@ -1364,33 +1363,27 @@ function doPost(e) {
         displayTodayDate();
         loadDeletedNotices();
 
-        // URL 설정 확인
-        if (!GOOGLE_SCRIPT_URL || GOOGLE_SCRIPT_URL.trim() === "") {
-          console.warn("⚠️ Google Apps Script URL이 설정되지 않았습니다.");
-          showConnectionStatus(
-            "offline",
-            "Google Apps Script URL을 설정해주세요"
-          );
-          showSetupGuide();
-          return;
-        } else {
-          console.log(
-            "✅ Google Apps Script URL 설정 확인됨. 연결을 시도합니다."
-          );
-          loadNoticesFromGoogle();
+        // URL 설정 확인 및 연결 시도
+        console.log(
+          "✅ Google Apps Script URL 설정 확인됨:",
+          GOOGLE_SCRIPT_URL
+        );
+        console.log("✅ 스프레드시트 ID 설정 확인됨:", SPREADSHEET_ID);
 
-          // 자동 새로고침 설정
-          if (AUTO_REFRESH_INTERVAL > 0) {
-            startAutoRefresh();
-          }
+        // 즉시 연결 시도
+        loadNoticesFromGoogle();
 
-          // 연결 상태 모니터링 시작
-          startConnectionMonitoring();
+        // 자동 새로고침 설정
+        if (AUTO_REFRESH_INTERVAL > 0) {
+          startAutoRefresh();
         }
+
+        // 연결 상태 모니터링 시작
+        startConnectionMonitoring();
       }
 
       /* ========================================
-           📦 MODULE: 구글 시트 API 통신 (개선됨)
+           📦 MODULE: 구글 시트 API 통신 (수정됨)
            ======================================== */
 
       async function loadNoticesFromGoogle() {
@@ -1405,19 +1398,22 @@ function doPost(e) {
         try {
           console.log("🔄 Google Sheets 연결 시도:", GOOGLE_SCRIPT_URL);
 
-          // 더 강력한 fetch 옵션 설정
+          // 연결 타임아웃 설정
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 15000); // 15초 타임아웃
+          const timeoutId = setTimeout(() => controller.abort(), 20000); // 20초 타임아웃
 
+          // 🔧 CORS 및 캐시 문제 해결을 위한 개선된 fetch 옵션
           const response = await fetch(
-            `${GOOGLE_SCRIPT_URL}?method=GET&t=${Date.now()}`,
+            `${GOOGLE_SCRIPT_URL}?method=GET&t=${Date.now()}&nocache=${Math.random()}`,
             {
               method: "GET",
               mode: "cors",
               cache: "no-cache",
+              credentials: "omit", // 🔧 인증 정보 제외
               headers: {
-                "Content-Type": "application/json",
                 Accept: "application/json",
+                "Content-Type": "application/json",
+                "Cache-Control": "no-cache",
               },
               signal: controller.signal,
             }
@@ -1426,13 +1422,18 @@ function doPost(e) {
           clearTimeout(timeoutId);
 
           console.log("📡 응답 상태:", response.status, response.statusText);
+          console.log("📡 응답 헤더:", [...response.headers.entries()]);
 
           if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
           }
 
           const contentType = response.headers.get("content-type");
+          console.log("📡 Content-Type:", contentType);
+
           if (!contentType || !contentType.includes("application/json")) {
+            const textResponse = await response.text();
+            console.error("📡 비JSON 응답:", textResponse.substring(0, 500));
             throw new Error(
               "응답이 JSON 형식이 아닙니다. Google Apps Script 설정을 확인하세요."
             );
@@ -1442,10 +1443,14 @@ function doPost(e) {
           console.log("📊 받은 데이터:", data);
 
           if (data.error) {
-            throw new Error(data.error);
+            throw new Error(`Google Apps Script 오류: ${data.error}`);
           }
 
-          notices = data.notices || [];
+          if (!data.notices || !Array.isArray(data.notices)) {
+            throw new Error("올바르지 않은 데이터 구조입니다.");
+          }
+
+          notices = data.notices;
           isOnline = true;
           showConnectionStatus(
             "online",
@@ -1453,7 +1458,9 @@ function doPost(e) {
           );
           displayNotices();
 
-          console.log(`✅ 구글 시트에서 ${notices.length}개 공지사항 로드`);
+          console.log(
+            `✅ 구글 시트에서 ${notices.length}개 공지사항 로드 완료`
+          );
         } catch (error) {
           console.error("❌ 구글 시트 로드 오류:", error);
           isOnline = false;
@@ -1464,7 +1471,8 @@ function doPost(e) {
 
           if (error.name === "AbortError") {
             errorMessage = "연결 시간 초과";
-            errorDetails = "Google Apps Script 응답이 15초를 초과했습니다.";
+            errorDetails =
+              "Google Apps Script 응답이 20초를 초과했습니다. 네트워크 연결을 확인하세요.";
           } else if (error.message.includes("CORS")) {
             errorMessage = "CORS 오류";
             errorDetails = "Google Apps Script에서 CORS 설정을 확인하세요.";
@@ -1472,6 +1480,10 @@ function doPost(e) {
             errorMessage = "응답 형식 오류";
             errorDetails =
               "Google Apps Script가 올바른 JSON을 반환하지 않습니다.";
+          } else if (error.message.includes("Failed to fetch")) {
+            errorMessage = "네트워크 오류";
+            errorDetails =
+              "인터넷 연결을 확인하거나 Google Apps Script URL이 정확한지 확인하세요.";
           }
 
           showConnectionStatus("offline", errorMessage);
@@ -1501,12 +1513,13 @@ function doPost(e) {
           console.log("📤 전송 데이터:", Object.fromEntries(formData));
 
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 15000);
+          const timeoutId = setTimeout(() => controller.abort(), 20000);
 
           const response = await fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
             body: formData,
             mode: "cors",
+            credentials: "omit",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
             },
@@ -1579,6 +1592,7 @@ function doPost(e) {
             method: "POST",
             body: formData,
             mode: "cors",
+            credentials: "omit",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
             },
@@ -1625,7 +1639,6 @@ function doPost(e) {
 
       function enterDemoMode() {
         isDemoMode = true;
-        DEMO_MODE = true;
         console.log("🎭 데모 모드 시작");
 
         showConnectionStatus("demo", "데모 모드 - 로컬 데이터 사용");
