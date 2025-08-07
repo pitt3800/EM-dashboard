@@ -163,6 +163,65 @@
         transform: translateY(-2px);
       }
 
+      /* 오늘의 공지사항 한 줄 스타일 */
+      .notice-item-simple {
+        background: white;
+        border: 1px solid var(--gray-200);
+        border-radius: var(--border-radius-sm);
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.5rem;
+        box-shadow: var(--shadow-sm);
+        transition: all 0.3s ease;
+        display: flex;
+        align-items: center;
+        gap: 1rem;
+        font-size: 0.9rem;
+        justify-content: space-between;
+      }
+
+      .notice-item-simple:hover {
+        border-color: var(--primary);
+        box-shadow: var(--shadow-md);
+        transform: translateY(-1px);
+      }
+
+      .notice-content-simple {
+        flex: 1;
+        color: var(--dark);
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        margin-right: 1rem;
+      }
+
+      .notice-actions-simple {
+        display: flex;
+        align-items: center;
+        gap: 0.75rem;
+        flex-shrink: 0;
+      }
+
+      .notice-date-simple {
+        color: var(--gray-500);
+        font-size: 0.8rem;
+        white-space: nowrap;
+      }
+
+      .notice-author-simple {
+        color: var(--gray-400);
+        font-size: 0.75rem;
+        white-space: nowrap;
+      }
+
+      .notice-department-simple {
+        color: var(--primary);
+        font-weight: 600;
+        font-size: 0.85rem;
+        min-width: 50px;
+        text-align: center;
+        flex-shrink: 0;
+      }
+
       .notice-department {
         display: inline-flex;
         align-items: center;
@@ -391,6 +450,23 @@
         #departmentFilter .er-btn {
           font-size: 0.8rem;
           padding: 0.4rem 0.8rem;
+        }
+
+        /* 오늘의 공지사항 한 줄 스타일 모바일 최적화 */
+        .notice-item-simple {
+          flex-direction: column;
+          align-items: flex-start;
+          gap: 0.5rem;
+        }
+
+        .notice-content-simple {
+          margin-right: 0;
+          order: 2;
+        }
+
+        .notice-actions-simple {
+          order: 3;
+          align-self: flex-end;
         }
       }
     </style>
@@ -1250,38 +1326,6 @@
       }
 
       function createNoticeHTML(notice) {
-        const departmentColors = {
-          GI: "#10b981",
-          CV: "#ef4444",
-          Biliary: "#f59e0b",
-          DR: "#6366f1",
-          NS: "#8b5cf6",
-          GS: "#06b6d4",
-          PLM: "#84cc16",
-          OS: "#f97316", // 정형외과 - 주황색
-          NPH: "#8b5cf6", // 신경외과 - 보라색 (NS와 구분)
-          CS: "#06b6d4", // 심장외과 - 청록색 (GS와 구분)
-          URO: "#eab308", // 비뇨기과 - 노란색
-        };
-
-        const departmentIcons = {
-          GI: "fas fa-stomach",
-          CV: "fas fa-heartbeat",
-          Biliary: "fas fa-liver",
-          DR: "fas fa-x-ray",
-          NS: "fas fa-brain",
-          GS: "fas fa-cut",
-          PLM: "fas fa-lungs",
-          OS: "fas fa-bone",
-          NPH: "fas fa-brain",
-          CS: "fas fa-heart",
-          URO: "fas fa-kidneys",
-        };
-
-        // 사용자 정의 진료과는 기본 색상과 아이콘 사용
-        const bgColor = departmentColors[notice.department] || "#6366f1";
-        const icon = departmentIcons[notice.department] || "fas fa-hospital";
-
         const startDate = new Date(notice.startDate).toLocaleDateString(
           "ko-KR",
           { month: "short", day: "numeric" }
@@ -1291,24 +1335,18 @@
               month: "short",
               day: "numeric",
             })}`
-          : " (무기한)";
+          : "";
 
+        // 모든 모드에서 간단한 한 줄 스타일 사용
         return `
-          <div class="notice-item" data-id="${notice.id}">
-            <div>
-              <span class="notice-department" style="background: ${bgColor}">
-                <i class="${icon}"></i> ${notice.department}
-              </span>
-              <div class="notice-content">${notice.content.replace(
-                /\n/g,
-                "<br>"
-              )}</div>
-            </div>
-            <div class="notice-actions">
-              <span class="notice-date">${startDate}${endDateText}</span>
+          <div class="notice-item-simple" data-id="${notice.id}">
+            <span class="notice-department-simple">${notice.department}</span>
+            <span class="notice-content-simple">${notice.content}</span>
+            <div class="notice-actions-simple">
+              <span class="notice-date-simple">${startDate}${endDateText}</span>
               ${
                 notice.author
-                  ? `<small style="color: var(--gray-500)">${notice.author}</small>`
+                  ? `<span class="notice-author-simple">${notice.author}</span>`
                   : ""
               }
               <button class="er-btn-danger-small" onclick="deleteNotice('${
