@@ -1,4 +1,4 @@
-// ==================== 기타 함수들 ====================<!DOCTYPE html>
+      // ==================== 기타 함수들 ====================<!DOCTYPE html>
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
@@ -366,28 +366,28 @@
         .notice-actions {
           align-items: flex-start;
         }
-
+        
         /* 모바일에서 버튼 그룹 세로 배치 */
         .er-card-header > div {
           flex-direction: column;
           gap: 0.5rem;
           align-items: stretch;
         }
-
+        
         .btn-group {
           width: 100%;
         }
-
+        
         .btn-group .er-btn {
           flex: 1;
           justify-content: center;
         }
-
+        
         /* 과별 필터 버튼 모바일 최적화 */
         #departmentFilter .d-flex {
           justify-content: flex-start !important;
         }
-
+        
         #departmentFilter .er-btn {
           font-size: 0.8rem;
           padding: 0.4rem 0.8rem;
@@ -427,14 +427,14 @@
               >
                 <i class="fas fa-sync-alt"></i> 새로고침
               </button>
-              <button
+              <button 
                 class="er-btn er-btn-outline"
                 onclick="showAllNotices()"
                 id="allNoticesBtn"
               >
                 <i class="fas fa-list"></i> 전체 공지사항
               </button>
-              <button
+              <button 
                 class="er-btn er-btn-outline"
                 onclick="showHistoryNotices()"
                 id="historyBtn"
@@ -442,10 +442,10 @@
                 <i class="fas fa-history"></i> History
               </button>
             </div>
-
+            
             <!-- 백업/불러오기 버튼 -->
             <div class="btn-group ms-2" role="group">
-              <button
+              <button 
                 class="er-btn er-btn-outline"
                 onclick="backupNotices()"
                 id="backupBtn"
@@ -453,7 +453,7 @@
               >
                 <i class="fas fa-download"></i> 백업
               </button>
-              <button
+              <button 
                 class="er-btn er-btn-outline"
                 onclick="triggerFileInput()"
                 id="restoreBtn"
@@ -462,80 +462,48 @@
                 <i class="fas fa-upload"></i> 불러오기
               </button>
             </div>
-
+            
             <!-- 숨겨진 파일 입력 -->
-            <input
-              type="file"
-              id="fileInput"
-              accept=".json"
-              style="display: none"
+            <input 
+              type="file" 
+              id="fileInput" 
+              accept=".json" 
+              style="display: none;" 
               onchange="restoreNotices(event)"
             />
           </div>
         </div>
         <div class="card-body p-4">
           <!-- 과별 정렬 버튼 -->
-          <div id="departmentFilter" class="mb-3" style="display: none">
+          <div id="departmentFilter" class="mb-3" style="display: none;">
             <div class="d-flex flex-wrap gap-2 justify-content-center">
-              <button
-                class="er-btn er-btn-outline"
-                onclick="filterByDepartment('all')"
-                id="filter-all"
-              >
+              <button class="er-btn er-btn-outline" onclick="filterByDepartment('all')" id="filter-all">
                 <i class="fas fa-list"></i> 전체
               </button>
-              <button
-                class="er-btn er-btn-outline"
-                onclick="filterByDepartment('GI')"
-                id="filter-GI"
-              >
+              <button class="er-btn er-btn-outline" onclick="filterByDepartment('GI')" id="filter-GI">
                 <i class="fas fa-stomach"></i> GI
               </button>
-              <button
-                class="er-btn er-btn-outline"
-                onclick="filterByDepartment('CV')"
-                id="filter-CV"
-              >
+              <button class="er-btn er-btn-outline" onclick="filterByDepartment('CV')" id="filter-CV">
                 <i class="fas fa-heartbeat"></i> CV
               </button>
-              <button
-                class="er-btn er-btn-outline"
-                onclick="filterByDepartment('Biliary')"
-                id="filter-Biliary"
-              >
+              <button class="er-btn er-btn-outline" onclick="filterByDepartment('Biliary')" id="filter-Biliary">
                 <i class="fas fa-liver"></i> Biliary
               </button>
-              <button
-                class="er-btn er-btn-outline"
-                onclick="filterByDepartment('DR')"
-                id="filter-DR"
-              >
+              <button class="er-btn er-btn-outline" onclick="filterByDepartment('DR')" id="filter-DR">
                 <i class="fas fa-x-ray"></i> DR
               </button>
-              <button
-                class="er-btn er-btn-outline"
-                onclick="filterByDepartment('NS')"
-                id="filter-NS"
-              >
+              <button class="er-btn er-btn-outline" onclick="filterByDepartment('NS')" id="filter-NS">
                 <i class="fas fa-brain"></i> NS
               </button>
-              <button
-                class="er-btn er-btn-outline"
-                onclick="filterByDepartment('GS')"
-                id="filter-GS"
-              >
+              <button class="er-btn er-btn-outline" onclick="filterByDepartment('GS')" id="filter-GS">
                 <i class="fas fa-cut"></i> GS
               </button>
-              <button
-                class="er-btn er-btn-outline"
-                onclick="filterByDepartment('PLM')"
-                id="filter-PLM"
-              >
+              <button class="er-btn er-btn-outline" onclick="filterByDepartment('PLM')" id="filter-PLM">
                 <i class="fas fa-lungs"></i> PLM
               </button>
             </div>
           </div>
-
+          
           <div id="noticesList">
             <div class="empty-state">
               <i class="fas fa-clipboard-list"></i>
@@ -646,14 +614,13 @@
     <script>
       // ==================== 설정 ====================
       // 🔧 수정 구역 - Google Apps Script URL 업데이트됨
-      const GOOGLE_SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbz4pyEdWFBffkL_34JymjJSBME844JFy7FOukH-oXgEkJZOJbCjz59CMA_TcZ6RENK_/exec";
+      const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4pyEdWFBffkL_34JymjJSBME844JFy7FOukH-oXgEkJZOJbCjz59CMA_TcZ6RENK_/exec";
       const AUTO_REFRESH_INTERVAL = 30000; // 30초
 
       let notices = [];
       let isOnline = false;
-      let currentViewMode = "today"; // 'today', 'all', 'history'
-      let currentFilter = "all"; // 현재 과별 필터
+      let currentViewMode = 'today'; // 'today', 'all', 'history'
+      let currentFilter = 'all'; // 현재 과별 필터
       let autoRefreshTimer = null;
 
       // ==================== 초기화 ====================
@@ -665,10 +632,10 @@
       function initializeSystem() {
         initializeDates();
         setupFormEventListeners();
-
+        
         // 기본 보기 모드 설정
-        currentViewMode = "today";
-        currentFilter = "all";
+        currentViewMode = 'today';
+        currentFilter = 'all';
         updateViewButtons();
 
         console.log("🔗 Google Apps Script URL:", GOOGLE_SCRIPT_URL);
@@ -713,35 +680,25 @@
           let data;
           try {
             const responseText = await response.text();
-            console.log(
-              "📄 응답 텍스트:",
-              responseText.substring(0, 200) + "..."
-            );
+            console.log("📄 응답 텍스트:", responseText.substring(0, 200) + "...");
             data = JSON.parse(responseText);
           } catch (parseError) {
             console.error("JSON 파싱 오류:", parseError);
-            throw new Error(
-              "서버 응답을 처리할 수 없습니다. Google Apps Script 설정을 확인해주세요."
-            );
+            throw new Error("서버 응답을 처리할 수 없습니다. Google Apps Script 설정을 확인해주세요.");
           }
 
           console.log("📊 받은 데이터:", data);
 
           if (data.error) {
             if (data.error.includes("openById")) {
-              throw new Error(
-                "Google Sheets 접근 권한 또는 시트 ID를 확인해주세요."
-              );
+              throw new Error("Google Sheets 접근 권한 또는 시트 ID를 확인해주세요.");
             }
             throw new Error(`서버 오류: ${data.error}`);
           }
 
           notices = data.notices || [];
           isOnline = true;
-          showConnectionStatus(
-            "online",
-            `연결됨 - ${notices.length}개 공지사항`
-          );
+          showConnectionStatus("online", `연결됨 - ${notices.length}개 공지사항`);
           displayNotices();
 
           console.log(`✅ ${notices.length}개 공지사항 로드 완료`);
@@ -759,10 +716,7 @@
           }
 
           showConnectionStatus("offline", errorMessage);
-          showMessage(
-            "error",
-            `연결 실패: ${error.message}. Google Apps Script 설정을 확인해주세요.`
-          );
+          showMessage("error", `연결 실패: ${error.message}. Google Apps Script 설정을 확인해주세요.`);
           loadLocalBackup();
         }
       }
@@ -794,9 +748,7 @@
           clearTimeout(timeoutId);
 
           if (!response.ok) {
-            throw new Error(
-              `HTTP 오류 ${response.status}: ${response.statusText}`
-            );
+            throw new Error(`HTTP 오류 ${response.status}: ${response.statusText}`);
           }
 
           let result;
@@ -826,10 +778,7 @@
           console.error("❌ 저장 오류:", error);
           showMessage("error", `저장 실패: ${error.message}`);
 
-          if (
-            error.message.includes("Failed to fetch") ||
-            error.message.includes("시간 초과")
-          ) {
+          if (error.message.includes("Failed to fetch") || error.message.includes("시간 초과")) {
             showMessage("info", "네트워크 문제로 인해 저장에 실패했습니다.");
           }
 
@@ -873,21 +822,21 @@
 
       // ==================== 보기 모드 관리 ====================
       function showAllNotices() {
-        currentViewMode = "all";
+        currentViewMode = 'all';
         updateViewButtons();
         displayNotices();
         console.log("📋 전체 공지사항 보기 모드");
       }
 
       function showHistoryNotices() {
-        currentViewMode = "history";
+        currentViewMode = 'history';
         updateViewButtons();
         displayNotices();
         console.log("📜 히스토리 보기 모드");
       }
 
       function showTodayNotices() {
-        currentViewMode = "today";
+        currentViewMode = 'today';
         updateViewButtons();
         displayNotices();
         console.log("📅 오늘 공지사항 보기 모드");
@@ -895,39 +844,38 @@
 
       function updateViewButtons() {
         // 버튼 활성화 상태 초기화
-        document.getElementById("refreshBtn").classList.remove("active");
-        document.getElementById("allNoticesBtn").classList.remove("active");
-        document.getElementById("historyBtn").classList.remove("active");
-
+        document.getElementById('refreshBtn').classList.remove('active');
+        document.getElementById('allNoticesBtn').classList.remove('active');
+        document.getElementById('historyBtn').classList.remove('active');
+        
         // 현재 모드에 따라 버튼 활성화
-        if (currentViewMode === "today") {
-          document.getElementById("refreshBtn").classList.add("active");
-        } else if (currentViewMode === "all") {
-          document.getElementById("allNoticesBtn").classList.add("active");
-        } else if (currentViewMode === "history") {
-          document.getElementById("historyBtn").classList.add("active");
+        if (currentViewMode === 'today') {
+          document.getElementById('refreshBtn').classList.add('active');
+        } else if (currentViewMode === 'all') {
+          document.getElementById('allNoticesBtn').classList.add('active');
+        } else if (currentViewMode === 'history') {
+          document.getElementById('historyBtn').classList.add('active');
         }
-
+        
         // 과별 필터 버튼 표시/숨김
-        const filterDiv = document.getElementById("departmentFilter");
-        if (currentViewMode !== "today") {
-          filterDiv.style.display = "block";
+        const filterDiv = document.getElementById('departmentFilter');
+        if (currentViewMode !== 'today') {
+          filterDiv.style.display = 'block';
         } else {
-          filterDiv.style.display = "none";
+          filterDiv.style.display = 'none';
         }
-
+        
         // 헤더 제목 업데이트
         updateHeaderTitle();
       }
 
       function updateHeaderTitle() {
-        const headerSpan = document.querySelector(".er-card-header span");
-        if (currentViewMode === "today") {
-          headerSpan.innerHTML =
-            '<i class="fas fa-list-alt"></i> 오늘의 공지사항';
-        } else if (currentViewMode === "all") {
+        const headerSpan = document.querySelector('.er-card-header span');
+        if (currentViewMode === 'today') {
+          headerSpan.innerHTML = '<i class="fas fa-list-alt"></i> 오늘의 공지사항';
+        } else if (currentViewMode === 'all') {
           headerSpan.innerHTML = '<i class="fas fa-list"></i> 전체 공지사항';
-        } else if (currentViewMode === "history") {
+        } else if (currentViewMode === 'history') {
           headerSpan.innerHTML = '<i class="fas fa-history"></i> 히스토리';
         }
       }
@@ -935,15 +883,15 @@
       // ==================== 과별 필터링 ====================
       function filterByDepartment(department) {
         currentFilter = department;
-
+        
         // 모든 필터 버튼 비활성화
-        document.querySelectorAll('[id^="filter-"]').forEach((btn) => {
-          btn.classList.remove("active");
+        document.querySelectorAll('[id^="filter-"]').forEach(btn => {
+          btn.classList.remove('active');
         });
-
+        
         // 선택된 필터 버튼 활성화
-        document.getElementById(`filter-${department}`).classList.add("active");
-
+        document.getElementById(`filter-${department}`).classList.add('active');
+        
         displayNotices();
         console.log(`🏥 과별 필터 적용: ${department}`);
       }
@@ -956,7 +904,7 @@
         const icons = {
           online: "fas fa-check-circle",
           offline: "fas fa-exclamation-circle",
-          loading: "fas fa-spinner fa-spin",
+          loading: "fas fa-spinner fa-spin"
         };
 
         statusDiv.innerHTML = `<i class="${icons[status]}"></i> ${message}`;
@@ -991,32 +939,32 @@
         let filteredNotices = [];
 
         // 모드에 따라 공지사항 필터링
-        if (currentViewMode === "today") {
+        if (currentViewMode === 'today') {
           filteredNotices = getTodayNotices();
-        } else if (currentViewMode === "all") {
+        } else if (currentViewMode === 'all') {
           filteredNotices = getAllNotices();
-        } else if (currentViewMode === "history") {
+        } else if (currentViewMode === 'history') {
           filteredNotices = getHistoryNotices();
         }
 
         // 과별 필터 적용
-        if (currentFilter !== "all") {
-          filteredNotices = filteredNotices.filter(
-            (notice) => notice.department === currentFilter
+        if (currentFilter !== 'all') {
+          filteredNotices = filteredNotices.filter(notice => 
+            notice.department === currentFilter
           );
         }
 
         if (filteredNotices.length === 0) {
           let emptyMessage = "";
-          if (currentViewMode === "today") {
+          if (currentViewMode === 'today') {
             emptyMessage = "오늘 표시할 공지사항이 없습니다";
-          } else if (currentViewMode === "all") {
+          } else if (currentViewMode === 'all') {
             emptyMessage = "전체 공지사항이 없습니다";
-          } else if (currentViewMode === "history") {
+          } else if (currentViewMode === 'history') {
             emptyMessage = "히스토리에 표시할 공지사항이 없습니다";
           }
-
-          if (currentFilter !== "all") {
+          
+          if (currentFilter !== 'all') {
             emptyMessage += ` (${currentFilter} 과)`;
           }
 
@@ -1063,16 +1011,8 @@
         const bgColor = departmentColors[notice.department] || "#4f46e5";
         const icon = departmentIcons[notice.department] || "fas fa-hospital";
 
-        const startDate = new Date(notice.startDate).toLocaleDateString(
-          "ko-KR",
-          { month: "short", day: "numeric" }
-        );
-        const endDateText = notice.endDate
-          ? ` ~ ${new Date(notice.endDate).toLocaleDateString("ko-KR", {
-              month: "short",
-              day: "numeric",
-            })}`
-          : " (무기한)";
+        const startDate = new Date(notice.startDate).toLocaleDateString("ko-KR", { month: "short", day: "numeric" });
+        const endDateText = notice.endDate ? ` ~ ${new Date(notice.endDate).toLocaleDateString("ko-KR", { month: "short", day: "numeric" })}` : " (무기한)";
 
         return `
           <div class="notice-item" data-id="${notice.id}">
@@ -1080,21 +1020,12 @@
               <span class="notice-department" style="background: ${bgColor}">
                 <i class="${icon}"></i> ${notice.department}
               </span>
-              <div class="notice-content">${notice.content.replace(
-                /\n/g,
-                "<br>"
-              )}</div>
+              <div class="notice-content">${notice.content.replace(/\n/g, "<br>")}</div>
             </div>
             <div class="notice-actions">
               <span class="notice-date">${startDate}${endDateText}</span>
-              ${
-                notice.author
-                  ? `<small style="color: var(--gray-500)">${notice.author}</small>`
-                  : ""
-              }
-              <button class="er-btn-danger-small" onclick="deleteNotice('${
-                notice.id
-              }')" title="삭제">
+              ${notice.author ? `<small style="color: var(--gray-500)">${notice.author}</small>` : ""}
+              <button class="er-btn-danger-small" onclick="deleteNotice('${notice.id}')" title="삭제">
                 <i class="fas fa-trash"></i>
               </button>
             </div>
@@ -1119,7 +1050,7 @@
           .filter((notice) => {
             // 오늘 이후에 시작하거나, 아직 끝나지 않은 공지사항
             return notice.endDate
-              ? today <= notice.endDate // 종료일이 오늘 이후
+              ? today <= notice.endDate  // 종료일이 오늘 이후
               : today <= notice.startDate || today >= notice.startDate; // 시작일이 오늘 이후이거나 이미 시작됨
           })
           .sort((a, b) => new Date(a.startDate) - new Date(b.startDate)); // 시작일 순으로 정렬
@@ -1142,12 +1073,10 @@
       }
 
       function setupFormEventListeners() {
-        document
-          .getElementById("noticeForm")
-          .addEventListener("submit", async function (e) {
-            e.preventDefault();
-            await addNotice();
-          });
+        document.getElementById("noticeForm").addEventListener("submit", async function (e) {
+          e.preventDefault();
+          await addNotice();
+        });
       }
 
       async function addNotice() {
@@ -1180,12 +1109,12 @@
       }
 
       // ==================== 백업/불러오기 기능 ====================
-
+      
       // 🔧 수정 가능 구역 - 백업 파일명 설정
       function generateBackupFileName() {
         const now = new Date();
-        const dateStr = now.toISOString().split("T")[0]; // YYYY-MM-DD
-        const timeStr = now.toTimeString().split(" ")[0].replace(/:/g, "-"); // HH-MM-SS
+        const dateStr = now.toISOString().split('T')[0]; // YYYY-MM-DD
+        const timeStr = now.toTimeString().split(' ')[0].replace(/:/g, '-'); // HH-MM-SS
         return `응급실공지사항_백업_${dateStr}_${timeStr}.json`;
       }
 
@@ -1195,10 +1124,7 @@
       function backupNotices() {
         try {
           if (!notices || notices.length === 0) {
-            showMessage(
-              "info",
-              "백업할 공지사항이 없습니다. 먼저 공지사항을 불러와주세요."
-            );
+            showMessage("info", "백업할 공지사항이 없습니다. 먼저 공지사항을 불러와주세요.");
             return;
           }
 
@@ -1209,41 +1135,39 @@
               exportDate: new Date().toISOString(),
               totalNotices: notices.length,
               exportedBy: "응급실 게시판 시스템",
-              description: "응급의학과 공지사항 전체 백업 파일",
+              description: "응급의학과 공지사항 전체 백업 파일"
             },
-            notices: notices.map((notice) => ({
+            notices: notices.map(notice => ({
               id: notice.id,
               department: notice.department,
               startDate: notice.startDate,
               endDate: notice.endDate || "",
               content: notice.content,
               author: notice.author || "",
-              createdAt: notice.createdAt || new Date().toISOString(),
-            })),
+              createdAt: notice.createdAt || new Date().toISOString()
+            }))
           };
 
           // JSON 문자열 생성
           const jsonString = JSON.stringify(backupData, null, 2);
-
+          
           // Blob 생성 및 다운로드
-          const blob = new Blob([jsonString], { type: "application/json" });
+          const blob = new Blob([jsonString], { type: 'application/json' });
           const url = URL.createObjectURL(blob);
-
-          const a = document.createElement("a");
+          
+          const a = document.createElement('a');
           a.href = url;
           a.download = generateBackupFileName();
           document.body.appendChild(a);
           a.click();
           document.body.removeChild(a);
-
+          
           // 메모리 정리
           URL.revokeObjectURL(url);
-
-          showMessage(
-            "success",
-            `${notices.length}개 공지사항이 성공적으로 백업되었습니다!`
-          );
+          
+          showMessage("success", `${notices.length}개 공지사항이 성공적으로 백업되었습니다!`);
           console.log(`📦 백업 완료: ${notices.length}개 공지사항`);
+          
         } catch (error) {
           console.error("백업 오류:", error);
           showMessage("error", "백업 중 오류가 발생했습니다: " + error.message);
@@ -1254,7 +1178,7 @@
        * 파일 입력 창 트리거
        */
       function triggerFileInput() {
-        document.getElementById("fileInput").click();
+        document.getElementById('fileInput').click();
       }
 
       /**
@@ -1262,49 +1186,43 @@
        */
       async function restoreNotices(event) {
         const file = event.target.files[0];
-
+        
         if (!file) {
           return;
         }
 
         try {
           // 파일 유효성 검사
-          if (!file.name.endsWith(".json")) {
+          if (!file.name.endsWith('.json')) {
             showMessage("error", "JSON 파일만 업로드할 수 있습니다.");
             return;
           }
 
-          if (file.size > 10 * 1024 * 1024) {
-            // 10MB 제한
+          if (file.size > 10 * 1024 * 1024) { // 10MB 제한
             showMessage("error", "파일 크기가 너무 큽니다. (최대 10MB)");
             return;
           }
 
           showMessage("info", "백업 파일을 읽는 중...");
-
+          
           // 파일 읽기
           const fileContent = await readFileAsText(file);
           const backupData = JSON.parse(fileContent);
-
+          
           // 백업 파일 구조 검증
           if (!validateBackupFile(backupData)) {
-            showMessage(
-              "error",
-              "올바른 백업 파일이 아닙니다. 파일 형식을 확인해주세요."
-            );
+            showMessage("error", "올바른 백업 파일이 아닙니다. 파일 형식을 확인해주세요.");
             return;
           }
 
           // 복원 확인
           const confirmMessage = `백업 파일 정보:
           
-• 백업 일시: ${new Date(backupData.metadata.exportDate).toLocaleString("ko-KR")}
+• 백업 일시: ${new Date(backupData.metadata.exportDate).toLocaleString('ko-KR')}
 • 공지사항 수: ${backupData.metadata.totalNotices}개
 • 버전: ${backupData.metadata.version}
 
-현재 ${notices.length}개의 공지사항을 ${
-            backupData.notices.length
-          }개로 교체하시겠습니까?
+현재 ${notices.length}개의 공지사항을 ${backupData.notices.length}개로 교체하시겠습니까?
 
 ⚠️ 주의: 현재 데이터는 복원 후 사라집니다!`;
 
@@ -1315,37 +1233,27 @@
 
           // Google Sheets에 복원 (배치 업로드)
           const success = await restoreToGoogleSheets(backupData.notices);
-
+          
           if (success) {
             notices = backupData.notices;
             displayNotices();
-            showMessage(
-              "success",
-              `${backupData.notices.length}개 공지사항이 성공적으로 복원되었습니다!`
-            );
-            console.log(
-              `📥 복원 완료: ${backupData.notices.length}개 공지사항`
-            );
+            showMessage("success", `${backupData.notices.length}개 공지사항이 성공적으로 복원되었습니다!`);
+            console.log(`📥 복원 완료: ${backupData.notices.length}개 공지사항`);
           } else {
             showMessage("error", "Google Sheets 복원 중 오류가 발생했습니다.");
           }
+
         } catch (error) {
           console.error("복원 오류:", error);
-
+          
           if (error instanceof SyntaxError) {
-            showMessage(
-              "error",
-              "백업 파일이 손상되었거나 올바른 JSON 형식이 아닙니다."
-            );
+            showMessage("error", "백업 파일이 손상되었거나 올바른 JSON 형식이 아닙니다.");
           } else {
-            showMessage(
-              "error",
-              "복원 중 오류가 발생했습니다: " + error.message
-            );
+            showMessage("error", "복원 중 오류가 발생했습니다: " + error.message);
           }
         } finally {
           // 파일 입력 초기화
-          event.target.value = "";
+          event.target.value = '';
         }
       }
 
@@ -1355,9 +1263,9 @@
       function readFileAsText(file) {
         return new Promise((resolve, reject) => {
           const reader = new FileReader();
-          reader.onload = (e) => resolve(e.target.result);
-          reader.onerror = (e) => reject(new Error("파일을 읽을 수 없습니다."));
-          reader.readAsText(file, "utf-8");
+          reader.onload = e => resolve(e.target.result);
+          reader.onerror = e => reject(new Error("파일을 읽을 수 없습니다."));
+          reader.readAsText(file, 'utf-8');
         });
       }
 
@@ -1370,25 +1278,21 @@
           if (!data.metadata || !data.notices) {
             return false;
           }
-
+          
           if (!Array.isArray(data.notices)) {
             return false;
           }
-
+          
           // 공지사항 데이터 구조 확인
           for (const notice of data.notices) {
-            if (
-              !notice.id ||
-              !notice.department ||
-              !notice.startDate ||
-              !notice.content
-            ) {
+            if (!notice.id || !notice.department || !notice.startDate || !notice.content) {
               console.warn("유효하지 않은 공지사항 데이터:", notice);
               return false;
             }
           }
-
+          
           return true;
+          
         } catch (error) {
           console.error("백업 파일 검증 오류:", error);
           return false;
@@ -1401,7 +1305,7 @@
       async function restoreToGoogleSheets(noticesData) {
         try {
           showConnectionStatus("loading", "Google Sheets에 복원 중...");
-
+          
           const formData = new URLSearchParams();
           formData.append("method", "RESTORE");
           formData.append("notices", JSON.stringify(noticesData));
@@ -1422,9 +1326,7 @@
           clearTimeout(timeoutId);
 
           if (!response.ok) {
-            throw new Error(
-              `HTTP 오류 ${response.status}: ${response.statusText}`
-            );
+            throw new Error(`HTTP 오류 ${response.status}: ${response.statusText}`);
           }
 
           let result;
@@ -1439,33 +1341,28 @@
             throw new Error(result.error);
           }
 
-          showConnectionStatus(
-            "online",
-            `복원 완료 - ${noticesData.length}개 공지사항`
-          );
+          showConnectionStatus("online", `복원 완료 - ${noticesData.length}개 공지사항`);
           return true;
+
         } catch (error) {
           console.error("Google Sheets 복원 오류:", error);
           showConnectionStatus("offline", "복원 실패");
-
+          
           // 로컬에만 복원하고 경고 표시
-          showMessage(
-            "error",
-            `Google Sheets 복원 실패: ${error.message}. 데이터는 로컬에만 복원되었습니다.`
-          );
+          showMessage("error", `Google Sheets 복원 실패: ${error.message}. 데이터는 로컬에만 복원되었습니다.`);
           return false;
         }
       }
       function refreshNotices() {
-        currentViewMode = "today";
-        currentFilter = "all";
+        currentViewMode = 'today';
+        currentFilter = 'all';
         updateViewButtons();
         loadNoticesFromGoogle();
       }
 
       function startAutoRefresh() {
         autoRefreshTimer = setInterval(() => {
-          if (isOnline && currentViewMode === "today") {
+          if (isOnline && currentViewMode === 'today') {
             console.log("🔄 자동 새로고침");
             loadNoticesFromGoogle();
           }
@@ -1483,17 +1380,12 @@
           const backupString = JSON.stringify(backupData);
 
           if (backupString.length > 5000000) {
-            console.warn(
-              "⚠️ 백업 데이터가 너무 큽니다. 최근 20개만 저장합니다."
-            );
+            console.warn("⚠️ 백업 데이터가 너무 큽니다. 최근 20개만 저장합니다.");
             backupData.notices = notices.slice(0, 20);
           }
 
           localStorage.setItem("erNoticesBackup", JSON.stringify(backupData));
-          console.log(
-            "💾 백업 저장 완료:",
-            backupData.notices.length + "개 공지사항"
-          );
+          console.log("💾 백업 저장 완료:", backupData.notices.length + "개 공지사항");
         } catch (error) {
           console.error("백업 저장 오류:", error);
 
@@ -1504,21 +1396,12 @@
                 notices: notices.slice(0, 10),
                 timestamp: new Date().toISOString(),
               };
-              localStorage.setItem(
-                "erNoticesBackup",
-                JSON.stringify(minimalBackup)
-              );
-              console.log(
-                "💾 최소 백업 저장 완료:",
-                minimalBackup.notices.length + "개"
-              );
+              localStorage.setItem("erNoticesBackup", JSON.stringify(minimalBackup));
+              console.log("💾 최소 백업 저장 완료:", minimalBackup.notices.length + "개");
             } catch (secondError) {
               console.error("최소 백업도 실패:", secondError);
               localStorage.clear();
-              showMessage(
-                "info",
-                "저장 공간 부족으로 로컬 백업을 정리했습니다."
-              );
+              showMessage("info", "저장 공간 부족으로 로컬 백업을 정리했습니다.");
             }
           }
         }
@@ -1535,10 +1418,7 @@
             const backupAge = new Date() - new Date(backupData.timestamp);
             const hoursAgo = Math.floor(backupAge / (1000 * 60 * 60));
 
-            showMessage(
-              "error",
-              `오프라인 모드: ${notices.length}개 백업 데이터 사용 중 (${hoursAgo}시간 전 백업)`
-            );
+            showMessage("error", `오프라인 모드: ${notices.length}개 백업 데이터 사용 중 (${hoursAgo}시간 전 백업)`);
           } else {
             displayOfflineMessage();
           }
