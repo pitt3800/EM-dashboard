@@ -1161,7 +1161,8 @@
             "
           ><code>function doGet(e) {
   try {
-    const sheet = SpreadsheetApp.openById('YOUR_SPREADSHEET_ID'); // 🔧 여기에 스프레드시트 ID 입력
+    const sheet = SpreadsheetApp.openById('https://docs.google.com/spreadsheets/d/1Ev6UnsN-6cd3wIUxobIaBFVn1RTvDBdB7YoRnLXT2Jc'); 
+    // 🔧 여기에 스프레드시트 ID 입력
     const dataSheet = sheet.getActiveSheet();
     
     // 헤더가 없으면 생성
@@ -1199,7 +1200,8 @@
 
 function doPost(e) {
   try {
-    const sheet = SpreadsheetApp.openById('YOUR_SPREADSHEET_ID'); // 🔧 여기에 스프레드시트 ID 입력
+    const sheet = SpreadsheetApp.openById('https://docs.google.com/spreadsheets/d/1Ev6UnsN-6cd3wIUxobIaBFVn1RTvDBdB7YoRnLXT2Jc'); 
+    // 🔧 여기에 스프레드시트 ID 입력
     const dataSheet = sheet.getActiveSheet();
     
     const method = e.parameter.method;
