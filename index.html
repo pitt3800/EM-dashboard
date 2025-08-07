@@ -1,9 +1,9 @@
-.status-demo { background: var(--info); color: white; }<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="ko">
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>응급실 게시판 시스템 - 공유버전</title>
+    <title>응급실 게시판 시스템 - 연결 문제 해결버전</title>
 
     <!-- 부트스트랩 CSS -->
     <link
@@ -162,6 +162,64 @@
       .status-loading {
         background: var(--warning);
         color: white;
+      }
+
+      .status-demo {
+        background: var(--info);
+        color: white;
+      }
+
+      /* ========================================
+           📦 MODULE: 연결 오류 및 설정 가이드
+           ======================================== */
+      .setup-guide {
+        background: linear-gradient(135deg, #fff9c4 0%, #fef3c7 100%);
+        border: 2px solid #f59e0b;
+        border-radius: var(--border-radius);
+        padding: 2rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .setup-guide h4 {
+        color: #92400e;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+      }
+
+      .setup-guide ol {
+        color: #78350f;
+        margin-bottom: 1rem;
+      }
+
+      .setup-guide li {
+        margin-bottom: 0.5rem;
+      }
+
+      .setup-guide code {
+        background: rgba(0, 0, 0, 0.1);
+        padding: 0.2rem 0.4rem;
+        border-radius: 4px;
+        font-family: "Courier New", monospace;
+      }
+
+      .connection-error {
+        background: linear-gradient(135deg, #fee2e2 0%, #fecaca 100%);
+        border: 2px solid var(--danger);
+        border-radius: var(--border-radius);
+        padding: 1.5rem;
+        margin-bottom: 2rem;
+        box-shadow: var(--shadow-lg);
+      }
+
+      .connection-error h5 {
+        color: #991b1b;
+        margin-bottom: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
       }
 
       /* ========================================
@@ -782,7 +840,7 @@
           <div class="col-12 text-center">
             <h1><i class="fas fa-hospital"></i> 응급실 게시판</h1>
             <p class="lead">
-              Emergency Department Notice Board System - 공유버전
+              Emergency Department Notice Board System - 연결 문제 해결버전
             </p>
             <small style="opacity: 0.8">
               <i class="fas fa-cloud"></i> 실시간 정보 공유 시스템
@@ -793,6 +851,69 @@
     </div>
 
     <div class="container">
+      <!-- ========================================
+           📦 MODULE: 연결 오류 가이드
+           ======================================== -->
+      <div id="connectionErrorGuide" style="display: none">
+        <div class="connection-error">
+          <h5>
+            <i class="fas fa-exclamation-triangle"></i> 구글 시트 연결 오류
+          </h5>
+          <p><strong>오류 세부사항:</strong> <span id="errorDetails"></span></p>
+          <p>GitHub Pages에서는 다음 설정이 필요합니다:</p>
+          <ul>
+            <li>Google Apps Script 웹 앱 URL이 정확히 설정되었는지 확인</li>
+            <li>Google Apps Script에서 "액세스 권한"을 "모든 사용자"로 설정</li>
+            <li>CORS(Cross-Origin Resource Sharing) 오류 해결</li>
+          </ul>
+        </div>
+      </div>
+
+      <div id="setupGuide" style="display: none">
+        <div class="setup-guide">
+          <h4><i class="fas fa-wrench"></i> Google Apps Script 설정 가이드</h4>
+          <p><strong>단계별 설정 방법:</strong></p>
+          <ol>
+            <li>
+              <strong>Google Apps Script 프로젝트 생성:</strong>
+              <a href="https://script.google.com" target="_blank"
+                >script.google.com</a
+              >
+              방문
+            </li>
+            <li><strong>새 프로젝트 생성:</strong> "새 프로젝트" 버튼 클릭</li>
+            <li>
+              <strong>코드 작성:</strong> 아래 Google Apps Script 코드를
+              복사하여 붙여넣기
+            </li>
+            <li>
+              <strong>스프레드시트 생성:</strong> 새 Google Sheets 문서 생성 및
+              ID 복사
+            </li>
+            <li>
+              <strong>배포 설정:</strong> "배포" → "새 배포" → "유형: 웹 앱"
+              선택
+            </li>
+            <li>
+              <strong>액세스 권한:</strong> "액세스 권한"을
+              <code>"모든 사용자"</code>로 설정
+            </li>
+            <li>
+              <strong>배포 완료:</strong> 생성된 웹 앱 URL을 아래 설정에 입력
+            </li>
+          </ol>
+
+          <div class="mt-3">
+            <button class="er-btn er-btn-info" onclick="showGASCode()">
+              <i class="fas fa-code"></i> Google Apps Script 코드 보기
+            </button>
+            <button class="er-btn er-btn-success" onclick="enterDemoMode()">
+              <i class="fas fa-play"></i> 데모 모드로 시작
+            </button>
+          </div>
+        </div>
+      </div>
+
       <!-- ========================================
              📦 MODULE: 오늘의 공지사항 (우선 표시)
              ======================================== -->
@@ -1007,6 +1128,136 @@
          📦 MODULE: 모달 팝업들
          ======================================== -->
 
+    <!-- Google Apps Script 코드 모달 -->
+    <div
+      id="gasCodeModal"
+      class="modal-overlay"
+      onclick="closeModal('gasCodeModal')"
+    >
+      <div
+        class="modal-content"
+        onclick="event.stopPropagation()"
+        style="width: 90%; max-width: 800px"
+      >
+        <div class="modal-header">
+          <span><i class="fas fa-code"></i> Google Apps Script 코드</span>
+          <button class="modal-close" onclick="closeModal('gasCodeModal')">
+            &times;
+          </button>
+        </div>
+        <div class="modal-body">
+          <p>
+            <strong
+              >다음 코드를 Google Apps Script에 복사하여 붙여넣으세요:</strong
+            >
+          </p>
+          <pre
+            style="
+              background: #f4f4f4;
+              padding: 1rem;
+              border-radius: 8px;
+              overflow-x: auto;
+              font-size: 0.85rem;
+            "
+          ><code>function doGet(e) {
+  try {
+    const sheet = SpreadsheetApp.openById('YOUR_SPREADSHEET_ID'); // 🔧 여기에 스프레드시트 ID 입력
+    const dataSheet = sheet.getActiveSheet();
+    
+    // 헤더가 없으면 생성
+    if (dataSheet.getLastRow() === 0) {
+      dataSheet.getRange(1, 1, 1, 7).setValues([['ID', '진료과', '시작날짜', '종료날짜', '내용', '작성자', '등록일시']]);
+    }
+    
+    const data = dataSheet.getDataRange().getValues();
+    const headers = data[0];
+    const notices = [];
+    
+    for (let i = 1; i < data.length; i++) {
+      const row = data[i];
+      notices.push({
+        id: row[0],
+        department: row[1],
+        startDate: row[2],
+        endDate: row[3],
+        content: row[4],
+        author: row[5],
+        createdAt: row[6]
+      });
+    }
+    
+    return ContentService
+      .createTextOutput(JSON.stringify({notices: notices}))
+      .setMimeType(ContentService.MimeType.JSON);
+      
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({error: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}
+
+function doPost(e) {
+  try {
+    const sheet = SpreadsheetApp.openById('YOUR_SPREADSHEET_ID'); // 🔧 여기에 스프레드시트 ID 입력
+    const dataSheet = sheet.getActiveSheet();
+    
+    const method = e.parameter.method;
+    
+    if (method === 'POST') {
+      // 새 공지사항 추가
+      const id = Utilities.getUuid();
+      const department = e.parameter.department;
+      const startDate = e.parameter.startDate;
+      const endDate = e.parameter.endDate || '';
+      const content = e.parameter.content;
+      const author = e.parameter.author || '';
+      const createdAt = new Date().toISOString();
+      
+      dataSheet.appendRow([id, department, startDate, endDate, content, author, createdAt]);
+      
+      return ContentService
+        .createTextOutput(JSON.stringify({success: true, message: '공지사항이 등록되었습니다.'}))
+        .setMimeType(ContentService.MimeType.JSON);
+        
+    } else if (method === 'DELETE') {
+      // 공지사항 삭제
+      const id = e.parameter.id;
+      const data = dataSheet.getDataRange().getValues();
+      
+      for (let i = 1; i < data.length; i++) {
+        if (data[i][0] === id) {
+          dataSheet.deleteRow(i + 1);
+          break;
+        }
+      }
+      
+      return ContentService
+        .createTextOutput(JSON.stringify({success: true, message: '공지사항이 삭제되었습니다.'}))
+        .setMimeType(ContentService.MimeType.JSON);
+    }
+    
+  } catch (error) {
+    return ContentService
+      .createTextOutput(JSON.stringify({error: error.toString()}))
+      .setMimeType(ContentService.MimeType.JSON);
+  }
+}</code></pre>
+          <div class="mt-3">
+            <button class="er-btn er-btn-primary" onclick="copyGASCode()">
+              <i class="fas fa-copy"></i> 코드 복사
+            </button>
+            <button
+              class="er-btn er-btn-outline"
+              onclick="closeModal('gasCodeModal')"
+            >
+              <i class="fas fa-times"></i> 닫기
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
     <!-- 전체 공지사항 모달 -->
     <div
       id="allNoticesModal"
@@ -1076,14 +1327,16 @@
       // 🔧 Google Apps Script 웹 앱 URL을 여기에 입력하세요
       // 실제 Google Apps Script URL이 설정되어야만 시스템이 작동합니다
       const GOOGLE_SCRIPT_URL =
-        "https://script.google.com/macros/s/AKfycbxmFBJKTuj5dA0wNP9kooZOmImUdxxzgA5iA8NaummeUyPoIXa6DCfZAFjHSB_1TzuqJQ/exec";
-      // 실제 URL로 변경하세요
+        "https://script.google.com/macros/s/AKfycbwq2tLNNh4TdpJXgNc1sYyytqsev3NLHfCjclYZWSPlovKVRaQtjaL03itFomPUJPCE/exec"; // 여기에 실제 Google Apps Script URL 입력
 
       // 🔧 자동 새로고침 간격 (밀리초) - 0으로 설정하면 자동 새로고침 비활성화
       const AUTO_REFRESH_INTERVAL = 30000; // 30초
 
       // 🔧 연결 상태 확인 간격 (밀리초)
       const CONNECTION_CHECK_INTERVAL = 10000; // 10초
+
+      // 🔧 데모 모드 활성화 여부
+      let DEMO_MODE = false;
       // ==================== 수정 가능 구역 끝 ====================
 
       let notices = []; // 공지사항 저장 배열
@@ -1091,12 +1344,13 @@
       let isOnline = false; // 연결 상태
       let autoRefreshTimer = null; // 자동 새로고침 타이머
       let connectionCheckTimer = null; // 연결 상태 확인 타이머
+      let isDemoMode = false; // 데모 모드 상태
 
       /* ========================================
            📦 MODULE: 초기화 함수
            ======================================== */
       document.addEventListener("DOMContentLoaded", function () {
-        console.log("🏥 응급실 게시판 시스템 시작");
+        console.log("🏥 응급실 게시판 시스템 시작 - 연결 문제 해결버전");
         initializeSystem();
       });
 
@@ -1118,7 +1372,7 @@
           return;
         } else {
           console.log(
-            "✅ Google Apps Script URL 설정 확인됨. 온라인 모드로 시작합니다."
+            "✅ Google Apps Script URL 설정 확인됨. 연결을 시도합니다."
           );
           loadNoticesFromGoogle();
 
@@ -1133,14 +1387,24 @@
       }
 
       /* ========================================
-           📦 MODULE: 구글 시트 API 통신
+           📦 MODULE: 구글 시트 API 통신 (개선됨)
            ======================================== */
 
       async function loadNoticesFromGoogle() {
+        if (isDemoMode) {
+          loadDemoData();
+          return;
+        }
+
         showConnectionStatus("loading", "데이터 로드 중...");
+        hideConnectionError();
 
         try {
           console.log("🔄 Google Sheets 연결 시도:", GOOGLE_SCRIPT_URL);
+
+          // 더 강력한 fetch 옵션 설정
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 15000); // 15초 타임아웃
 
           const response = await fetch(
             `${GOOGLE_SCRIPT_URL}?method=GET&t=${Date.now()}`,
@@ -1150,14 +1414,25 @@
               cache: "no-cache",
               headers: {
                 "Content-Type": "application/json",
+                Accept: "application/json",
               },
+              signal: controller.signal,
             }
           );
+
+          clearTimeout(timeoutId);
 
           console.log("📡 응답 상태:", response.status, response.statusText);
 
           if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+
+          const contentType = response.headers.get("content-type");
+          if (!contentType || !contentType.includes("application/json")) {
+            throw new Error(
+              "응답이 JSON 형식이 아닙니다. Google Apps Script 설정을 확인하세요."
+            );
           }
 
           const data = await response.json();
@@ -1179,7 +1454,25 @@
         } catch (error) {
           console.error("❌ 구글 시트 로드 오류:", error);
           isOnline = false;
-          showConnectionStatus("offline", "연결 실패: " + error.message);
+
+          // 오류 타입별 메시지 설정
+          let errorMessage = "연결 실패";
+          let errorDetails = error.message;
+
+          if (error.name === "AbortError") {
+            errorMessage = "연결 시간 초과";
+            errorDetails = "Google Apps Script 응답이 15초를 초과했습니다.";
+          } else if (error.message.includes("CORS")) {
+            errorMessage = "CORS 오류";
+            errorDetails = "Google Apps Script에서 CORS 설정을 확인하세요.";
+          } else if (error.message.includes("JSON")) {
+            errorMessage = "응답 형식 오류";
+            errorDetails =
+              "Google Apps Script가 올바른 JSON을 반환하지 않습니다.";
+          }
+
+          showConnectionStatus("offline", errorMessage);
+          showConnectionError(errorDetails);
 
           // 로컬 백업이 있다면 사용
           loadLocalBackup();
@@ -1187,6 +1480,10 @@
       }
 
       async function addNoticeToGoogle(noticeData) {
+        if (isDemoMode) {
+          return addNoticeToDemo(noticeData);
+        }
+
         try {
           showConnectionStatus("loading", "저장 중...");
 
@@ -1200,6 +1497,9 @@
 
           console.log("📤 전송 데이터:", Object.fromEntries(formData));
 
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 15000);
+
           const response = await fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
             body: formData,
@@ -1207,7 +1507,10 @@
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
             },
+            signal: controller.signal,
           });
+
+          clearTimeout(timeoutId);
 
           console.log(
             "📡 저장 응답 상태:",
@@ -1242,19 +1545,32 @@
           return true;
         } catch (error) {
           console.error("❌ 구글 시트 추가 오류:", error);
-          showMessage("error", "저장 실패: " + error.message);
+
+          let errorMessage = "저장 실패: " + error.message;
+          if (error.name === "AbortError") {
+            errorMessage = "저장 시간 초과: 네트워크 연결을 확인하세요.";
+          }
+
+          showMessage("error", errorMessage);
           showConnectionStatus("offline", "저장 실패");
           return false;
         }
       }
 
       async function deleteNoticeFromGoogle(id) {
+        if (isDemoMode) {
+          return deleteNoticeFromDemo(id);
+        }
+
         try {
           showConnectionStatus("loading", "삭제 중...");
 
           const formData = new URLSearchParams();
           formData.append("method", "DELETE");
           formData.append("id", id);
+
+          const controller = new AbortController();
+          const timeoutId = setTimeout(() => controller.abort(), 15000);
 
           const response = await fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
@@ -1263,7 +1579,10 @@
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",
             },
+            signal: controller.signal,
           });
+
+          clearTimeout(timeoutId);
 
           if (!response.ok) {
             throw new Error(`HTTP ${response.status}: ${response.statusText}`);
@@ -1285,30 +1604,139 @@
           return true;
         } catch (error) {
           console.error("❌ 구글 시트 삭제 오류:", error);
-          showMessage("error", "삭제 실패: " + error.message);
+
+          let errorMessage = "삭제 실패: " + error.message;
+          if (error.name === "AbortError") {
+            errorMessage = "삭제 시간 초과: 네트워크 연결을 확인하세요.";
+          }
+
+          showMessage("error", errorMessage);
           showConnectionStatus("offline", "삭제 실패");
           return false;
         }
       }
 
       /* ========================================
-           📦 MODULE: 설정 안내 및 도움말
+           📦 MODULE: 데모 모드 기능
+           ======================================== */
+
+      function enterDemoMode() {
+        isDemoMode = true;
+        DEMO_MODE = true;
+        console.log("🎭 데모 모드 시작");
+
+        showConnectionStatus("demo", "데모 모드 - 로컬 데이터 사용");
+        hideSetupGuide();
+        hideConnectionError();
+
+        loadDemoData();
+        showMessage(
+          "info",
+          "데모 모드로 실행 중입니다. 실제 Google Sheets와 연동되지 않습니다."
+        );
+      }
+
+      function loadDemoData() {
+        // 데모용 샘플 데이터
+        notices = [
+          {
+            id: "demo-1",
+            department: "GI",
+            startDate: new Date().toISOString().split("T")[0],
+            endDate: "",
+            content: "내시경실 장비 점검으로 인한 일시 중단 안내",
+            author: "김의사",
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: "demo-2",
+            department: "CV",
+            startDate: new Date().toISOString().split("T")[0],
+            endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
+              .toISOString()
+              .split("T")[0],
+            content: "심장내과 응급환자 접수 시간 연장 (24시간)",
+            author: "이의사",
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: "demo-3",
+            department: "DR",
+            startDate: new Date().toISOString().split("T")[0],
+            endDate: "",
+            content: "MRI 장비 업그레이드 완료 - 검사 대기시간 단축",
+            author: "응급실",
+            createdAt: new Date().toISOString(),
+          },
+        ];
+
+        displayNotices();
+        console.log("🎭 데모 데이터 로드 완료");
+      }
+
+      function addNoticeToDemo(noticeData) {
+        const newNotice = {
+          id: "demo-" + Date.now(),
+          department: noticeData.department,
+          startDate: noticeData.startDate,
+          endDate: noticeData.endDate || "",
+          content: noticeData.content,
+          author: noticeData.author || "",
+          createdAt: new Date().toISOString(),
+        };
+
+        notices.push(newNotice);
+        displayNotices();
+
+        showMessage("success", "데모 공지사항이 추가되었습니다!");
+        clearForm();
+
+        console.log("🎭 데모 공지사항 추가:", newNotice);
+        return true;
+      }
+
+      function deleteNoticeFromDemo(id) {
+        const index = notices.findIndex((n) => n.id === id);
+        if (index !== -1) {
+          const deletedNotice = notices[index];
+          notices.splice(index, 1);
+
+          // 히스토리에 추가
+          deletedNotices.push({
+            ...deletedNotice,
+            deletedAt: new Date().toISOString(),
+            deletedBy: "demo_user",
+          });
+          saveDeletedNotices();
+
+          displayNotices();
+          showMessage("success", "데모 공지사항이 삭제되었습니다.");
+
+          console.log("🎭 데모 공지사항 삭제:", deletedNotice);
+          return true;
+        }
+        return false;
+      }
+
+      /* ========================================
+           📦 MODULE: 설정 안내 및 도움말 (개선됨)
            ======================================== */
 
       function showSetupGuide() {
+        document.getElementById("setupGuide").style.display = "block";
+
         const container = document.getElementById("noticesList");
         container.innerHTML = `
           <div class="empty-state">
             <i class="fas fa-cog" style="color: var(--warning);"></i>
             <h5>Google Apps Script 설정이 필요합니다</h5>
             <div style="text-align: left; max-width: 600px; margin: 0 auto;">
-              <p><strong>설정 단계:</strong></p>
-              <ol style="padding-left: 1.5rem;">
-                <li>Google Apps Script 프로젝트 생성</li>
-                <li>응급실 게시판용 코드 작성</li>
-                <li>웹 앱으로 배포</li>
-                <li>배포 URL을 코드의 <code>GOOGLE_SCRIPT_URL</code>에 입력</li>
-              </ol>
+              <p><strong>현재 상태:</strong> Google Apps Script URL이 설정되지 않았습니다.</p>
+              <p><strong>해결 방법:</strong></p>
+              <ul style="padding-left: 1.5rem;">
+                <li>위의 설정 가이드를 따라 Google Apps Script를 설정하세요</li>
+                <li>또는 "데모 모드로 시작" 버튼을 클릭하여 테스트해보세요</li>
+              </ul>
               <p style="margin-top: 1rem; padding: 1rem; background: var(--gray-100); border-radius: 8px;">
                 <i class="fas fa-info-circle"></i> 
                 <strong>참고:</strong> URL 설정 후 페이지를 새로고침하면 시스템이 작동합니다.
@@ -1330,12 +1758,86 @@
 
         showMessage(
           "error",
-          "Google Apps Script URL을 설정해야 시스템을 사용할 수 있습니다."
+          "Google Apps Script URL을 설정하거나 데모 모드를 사용하세요."
         );
       }
 
+      function hideSetupGuide() {
+        document.getElementById("setupGuide").style.display = "none";
+
+        // 폼 활성화
+        const submitBtn = document.getElementById("submitBtn");
+        const form = document.getElementById("noticeForm");
+        submitBtn.disabled = false;
+
+        Array.from(form.elements).forEach((element) => {
+          element.disabled = false;
+        });
+      }
+
+      function showConnectionError(errorDetails) {
+        const errorGuide = document.getElementById("connectionErrorGuide");
+        const errorDetailsSpan = document.getElementById("errorDetails");
+
+        errorDetailsSpan.textContent = errorDetails;
+        errorGuide.style.display = "block";
+      }
+
+      function hideConnectionError() {
+        document.getElementById("connectionErrorGuide").style.display = "none";
+      }
+
+      function showGASCode() {
+        document.getElementById("gasCodeModal").style.display = "flex";
+      }
+
+      function copyGASCode() {
+        const codeText = document.querySelector(
+          "#gasCodeModal pre code"
+        ).textContent;
+
+        if (navigator.clipboard) {
+          navigator.clipboard
+            .writeText(codeText)
+            .then(() => {
+              showMessage(
+                "success",
+                "Google Apps Script 코드가 클립보드에 복사되었습니다!"
+              );
+            })
+            .catch(() => {
+              fallbackCopyText(codeText);
+            });
+        } else {
+          fallbackCopyText(codeText);
+        }
+      }
+
+      function fallbackCopyText(text) {
+        const textArea = document.createElement("textarea");
+        textArea.value = text;
+        document.body.appendChild(textArea);
+        textArea.focus();
+        textArea.select();
+
+        try {
+          document.execCommand("copy");
+          showMessage(
+            "success",
+            "Google Apps Script 코드가 클립보드에 복사되었습니다!"
+          );
+        } catch (err) {
+          showMessage(
+            "error",
+            "코드 복사에 실패했습니다. 수동으로 복사해주세요."
+          );
+        }
+
+        document.body.removeChild(textArea);
+      }
+
       /* ========================================
-           📦 MODULE: 연결 상태 관리
+           📦 MODULE: 연결 상태 관리 (개선됨)
            ======================================== */
 
       function showConnectionStatus(status, message) {
@@ -1344,6 +1846,7 @@
           "status-online",
           "status-offline",
           "status-loading",
+          "status-demo",
         ];
 
         // 기존 상태 클래스 제거
@@ -1356,6 +1859,7 @@
           online: "fas fa-check-circle",
           offline: "fas fa-exclamation-circle",
           loading: "fas fa-spinner fa-spin",
+          demo: "fas fa-play-circle",
         };
 
         statusDiv.innerHTML = `<i class="${icons[status]}"></i> ${message}`;
@@ -1364,7 +1868,7 @@
         const submitBtn = document.getElementById("submitBtn");
         const refreshBtn = document.getElementById("refreshBtn");
 
-        if (status === "offline") {
+        if (status === "offline" && !isDemoMode) {
           submitBtn.disabled = true;
         } else {
           submitBtn.disabled = false;
@@ -1381,15 +1885,25 @@
       }
 
       function startConnectionMonitoring() {
+        if (isDemoMode) return;
+
         connectionCheckTimer = setInterval(async () => {
           try {
+            const controller = new AbortController();
+            const timeoutId = setTimeout(() => controller.abort(), 5000);
+
             const response = await fetch(
-              `${GOOGLE_SCRIPT_URL}?method=GET&t=${Date.now()}`
+              `${GOOGLE_SCRIPT_URL}?method=GET&t=${Date.now()}`,
+              { signal: controller.signal }
             );
+
+            clearTimeout(timeoutId);
+
             if (response.ok) {
               if (!isOnline) {
                 isOnline = true;
                 showConnectionStatus("online", "연결 복구됨");
+                hideConnectionError();
                 await loadNoticesFromGoogle();
               }
             } else {
@@ -1399,12 +1913,17 @@
             if (isOnline) {
               isOnline = false;
               showConnectionStatus("offline", "연결 끊어짐");
+              showConnectionError(
+                "네트워크 연결이 불안정합니다: " + error.message
+              );
             }
           }
         }, CONNECTION_CHECK_INTERVAL);
       }
 
       function startAutoRefresh() {
+        if (isDemoMode) return;
+
         autoRefreshTimer = setInterval(async () => {
           if (isOnline) {
             console.log("🔄 자동 새로고침 실행");
@@ -1628,7 +2147,7 @@
             })}`
           : " (무기한)";
 
-        const deleteButtonEnabled = isOnline;
+        const deleteButtonEnabled = isOnline || isDemoMode;
 
         return `
           <div class="notice-item" data-id="${notice.id}">
@@ -1685,7 +2204,7 @@
       }
 
       async function deleteNotice(id) {
-        if (!isOnline) {
+        if (!isOnline && !isDemoMode) {
           showMessage("error", "오프라인 상태에서는 삭제할 수 없습니다.");
           return;
         }
@@ -1697,7 +2216,7 @@
             const deletedNotice = {
               ...noticeToDelete,
               deletedAt: new Date().toISOString(),
-              deletedBy: "system",
+              deletedBy: isDemoMode ? "demo_user" : "system",
             };
             deletedNotices.push(deletedNotice);
             saveDeletedNotices();
@@ -1832,7 +2351,7 @@
             })}`
           : " (무기한)";
 
-        const restoreButtonEnabled = isOnline;
+        const restoreButtonEnabled = isOnline || isDemoMode;
 
         return `
           <div class="notice-item" style="opacity: 0.7; border-left: 4px solid var(--danger);">
@@ -1862,7 +2381,7 @@
       }
 
       async function restoreNotice(id) {
-        if (!isOnline) {
+        if (!isOnline && !isDemoMode) {
           showMessage("error", "오프라인 상태에서는 복원할 수 없습니다.");
           return;
         }
@@ -1924,7 +2443,11 @@
 
       async function refreshNotices() {
         console.log("🔄 수동 새로고침 실행");
-        await loadNoticesFromGoogle();
+        if (isDemoMode) {
+          showMessage("info", "데모 모드에서는 새로고침이 필요하지 않습니다.");
+        } else {
+          await loadNoticesFromGoogle();
+        }
       }
 
       function exportToday() {
@@ -1976,6 +2499,16 @@
           `📊 오늘의 공지사항 ${todayNotices.length}개 내보내기 완료`
         );
       }
+
+      // 페이지 언로드 시 타이머 정리
+      window.addEventListener("beforeunload", function () {
+        if (autoRefreshTimer) {
+          clearInterval(autoRefreshTimer);
+        }
+        if (connectionCheckTimer) {
+          clearInterval(connectionCheckTimer);
+        }
+      });
     </script>
   </body>
 </html>
