@@ -3,21 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <!-- 🚫 favicon 자동 요청 완전 차단 -->
-    <meta
-      name="msapplication-config"
-      content="data:application/xml;base64,PHhtbD48L3htbD4="
-    />
     <title>응급실 게시판 시스템</title>
-
-    <!-- ==================== favicon 오류 완전 해결 구역 시작 ==================== -->
-    <!-- 🔧 최소한의 favicon 설정 - GIF 형식 사용 -->
-    <link
-      rel="icon"
-      type="image/gif"
-      href="data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw=="
-    />
-    <!-- ==================== favicon 오류 완전 해결 구역 끝 ==================== -->
 
     <!-- 부트스트랩 CSS -->
     <link
@@ -346,50 +332,6 @@
         opacity: 0.5;
       }
 
-      .modal-overlay {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.5);
-        display: none;
-        z-index: 2000;
-        align-items: center;
-        justify-content: center;
-      }
-
-      .modal-content {
-        background: white;
-        border-radius: var(--border-radius);
-        box-shadow: var(--shadow-lg);
-        max-width: 90vw;
-        max-height: 90vh;
-        overflow-y: auto;
-      }
-
-      .modal-header {
-        background: var(--gray-800);
-        color: white;
-        padding: 1.5rem 2rem;
-        font-weight: 600;
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-      }
-
-      .modal-close {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 1.5rem;
-        cursor: pointer;
-      }
-
-      .modal-body {
-        padding: 2rem;
-      }
-
       @media (max-width: 768px) {
         .er-header h1 {
           font-size: 2rem;
@@ -555,9 +497,8 @@
 
     <script>
       // ==================== 설정 ====================
-      const GOOGLE_SCRIPT_URL =
-        const GOOGLE_SCRIPT_URL =
-          "https://script.google.com/macros/s/AKfycby_w7b7fAmet30qKHuOYiR13-qPuFmENFFlM6vy2sY3-hRRZgNmjewQ4Ium-gv3Vmo/exec";
+      // 🔧 수정 구역 - Google Apps Script URL 업데이트됨
+      const GOOGLE_SCRIPT_URL = "https://script.google.com/macros/s/AKfycbz4pyEdWFBffkL_34JymjJSBME844JFy7FOukH-oXgEkJZOJbCjz59CMA_TcZ6RENK_/exec";
       const AUTO_REFRESH_INTERVAL = 30000; // 30초
 
       let notices = [];
@@ -568,71 +509,14 @@
       // ==================== 초기화 ====================
       document.addEventListener("DOMContentLoaded", function () {
         console.log("🏥 응급실 게시판 시스템 시작");
-
-        // 🚫 favicon 오류 완전 차단 - 최종 해결책
-        preventFaviconError();
-
         initializeSystem();
       });
-
-      function preventFaviconError() {
-        // 모든 favicon 관련 요청을 완전히 차단
-        const head = document.getElementsByTagName("head")[0];
-
-        // 기존 favicon 링크들 제거
-        const existingIcons = document.querySelectorAll(
-          'link[rel*="icon"], link[rel*="shortcut"]'
-        );
-        existingIcons.forEach((link) => link.remove());
-
-        // 완전히 빈 favicon 생성 (1x1 투명 픽셀)
-        const link = document.createElement("link");
-        link.rel = "icon";
-        link.type = "image/gif";
-        link.href =
-          "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
-        head.appendChild(link);
-
-        // shortcut icon도 같은 방식으로 설정
-        const shortcut = document.createElement("link");
-        shortcut.rel = "shortcut icon";
-        shortcut.type = "image/gif";
-        shortcut.href =
-          "data:image/gif;base64,R0lGODlhAQABAAAAACH5BAEKAAEALAAAAAABAAEAAAICTAEAOw==";
-        head.appendChild(shortcut);
-
-        // 브라우저 favicon 캐시 무력화
-        if (window.location.protocol === "file:") {
-          // 로컬 파일에서 실행 시 추가 보호
-          const observer = new MutationObserver(function (mutations) {
-            mutations.forEach(function (mutation) {
-              if (mutation.type === "childList") {
-                mutation.addedNodes.forEach(function (node) {
-                  if (
-                    node.tagName === "LINK" &&
-                    (node.rel === "icon" || node.rel === "shortcut icon") &&
-                    node.href.includes("favicon.ico")
-                  ) {
-                    node.remove();
-                  }
-                });
-              }
-            });
-          });
-          observer.observe(head, { childList: true, subtree: true });
-        }
-
-        console.log("🚫 Favicon 오류 방지 시스템 활성화");
-      }
 
       function initializeSystem() {
         initializeDates();
         setupFormEventListeners();
 
-        console.log(
-          "https://script.google.com/macros/s/AKfycbw0Z6XFOXOFUtE6b9lk-G7JTLEBk5btwQ4uHAzT9eMZjoH7AR2mK9mvGsGdhgoLY3n4/exec:",
-          GOOGLE_SCRIPT_URL
-        );
+        console.log("🔗 Google Apps Script URL:", GOOGLE_SCRIPT_URL);
         loadNoticesFromGoogle();
 
         if (AUTO_REFRESH_INTERVAL > 0) {
@@ -657,7 +541,7 @@
           formData.append("timestamp", Date.now().toString());
 
           const controller = new AbortController();
-          const timeoutId = setTimeout(() => controller.abort(), 15000); // 15초로 단축
+          const timeoutId = setTimeout(() => controller.abort(), 15000);
 
           const response = await fetch(GOOGLE_SCRIPT_URL, {
             method: "POST",
@@ -679,35 +563,25 @@
           let data;
           try {
             const responseText = await response.text();
-            console.log(
-              "📄 응답 텍스트:",
-              responseText.substring(0, 200) + "..."
-            );
+            console.log("📄 응답 텍스트:", responseText.substring(0, 200) + "...");
             data = JSON.parse(responseText);
           } catch (parseError) {
             console.error("JSON 파싱 오류:", parseError);
-            throw new Error(
-              "서버 응답을 처리할 수 없습니다. Google Apps Script 설정을 확인해주세요."
-            );
+            throw new Error("서버 응답을 처리할 수 없습니다. Google Apps Script 설정을 확인해주세요.");
           }
 
           console.log("📊 받은 데이터:", data);
 
           if (data.error) {
             if (data.error.includes("openById")) {
-              throw new Error(
-                "Google Sheets 접근 권한 또는 시트 ID를 확인해주세요."
-              );
+              throw new Error("Google Sheets 접근 권한 또는 시트 ID를 확인해주세요.");
             }
             throw new Error(`서버 오류: ${data.error}`);
           }
 
           notices = data.notices || [];
           isOnline = true;
-          showConnectionStatus(
-            "online",
-            `연결됨 - ${notices.length}개 공지사항`
-          );
+          showConnectionStatus("online", `연결됨 - ${notices.length}개 공지사항`);
           displayNotices();
 
           console.log(`✅ ${notices.length}개 공지사항 로드 완료`);
@@ -725,10 +599,7 @@
           }
 
           showConnectionStatus("offline", errorMessage);
-          showMessage(
-            "error",
-            `연결 실패: ${error.message}. 데모 모드를 사용하거나 Google Apps Script 설정을 확인해주세요.`
-          );
+          showMessage("error", `연결 실패: ${error.message}. 데모 모드를 사용하거나 Google Apps Script 설정을 확인해주세요.`);
           loadLocalBackup();
         }
       }
@@ -764,9 +635,7 @@
           clearTimeout(timeoutId);
 
           if (!response.ok) {
-            throw new Error(
-              `HTTP 오류 ${response.status}: ${response.statusText}`
-            );
+            throw new Error(`HTTP 오류 ${response.status}: ${response.statusText}`);
           }
 
           let result;
@@ -796,15 +665,8 @@
           console.error("❌ 저장 오류:", error);
           showMessage("error", `저장 실패: ${error.message}`);
 
-          // 네트워크 오류 시 데모 모드 제안
-          if (
-            error.message.includes("Failed to fetch") ||
-            error.message.includes("시간 초과")
-          ) {
-            showMessage(
-              "info",
-              "네트워크 문제로 인해 저장에 실패했습니다. 데모 모드를 사용해보세요."
-            );
+          if (error.message.includes("Failed to fetch") || error.message.includes("시간 초과")) {
+            showMessage("info", "네트워크 문제로 인해 저장에 실패했습니다. 데모 모드를 사용해보세요.");
           }
 
           return false;
@@ -843,7 +705,7 @@
           loadNoticesFromGoogle();
           return true;
         } catch (error) {
-          console.error("❌ 삭제 오류:", error);
+          console.error("❌ 삭제 오료:", error);
           showMessage("error", "삭제 실패: " + error.message);
           return false;
         }
@@ -873,9 +735,7 @@
             id: "demo-2",
             department: "CV",
             startDate: new Date().toISOString().split("T")[0],
-            endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000)
-              .toISOString()
-              .split("T")[0],
+            endDate: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
             content: "심장내과 응급환자 접수 시간 연장 (24시간)",
             author: "이의사",
             createdAt: new Date().toISOString(),
@@ -1011,16 +871,8 @@
         const bgColor = departmentColors[notice.department] || "#4f46e5";
         const icon = departmentIcons[notice.department] || "fas fa-hospital";
 
-        const startDate = new Date(notice.startDate).toLocaleDateString(
-          "ko-KR",
-          { month: "short", day: "numeric" }
-        );
-        const endDateText = notice.endDate
-          ? ` ~ ${new Date(notice.endDate).toLocaleDateString("ko-KR", {
-              month: "short",
-              day: "numeric",
-            })}`
-          : " (무기한)";
+        const startDate = new Date(notice.startDate).toLocaleDateString("ko-KR", { month: "short", day: "numeric" });
+        const endDateText = notice.endDate ? ` ~ ${new Date(notice.endDate).toLocaleDateString("ko-KR", { month: "short", day: "numeric" })}` : " (무기한)";
 
         return `
           <div class="notice-item" data-id="${notice.id}">
@@ -1028,21 +880,12 @@
               <span class="notice-department" style="background: ${bgColor}">
                 <i class="${icon}"></i> ${notice.department}
               </span>
-              <div class="notice-content">${notice.content.replace(
-                /\n/g,
-                "<br>"
-              )}</div>
+              <div class="notice-content">${notice.content.replace(/\n/g, "<br>")}</div>
             </div>
             <div class="notice-actions">
               <span class="notice-date">${startDate}${endDateText}</span>
-              ${
-                notice.author
-                  ? `<small style="color: var(--gray-500)">${notice.author}</small>`
-                  : ""
-              }
-              <button class="er-btn-danger-small" onclick="deleteNotice('${
-                notice.id
-              }')" title="삭제">
+              ${notice.author ? `<small style="color: var(--gray-500)">${notice.author}</small>` : ""}
+              <button class="er-btn-danger-small" onclick="deleteNotice('${notice.id}')" title="삭제">
                 <i class="fas fa-trash"></i>
               </button>
             </div>
@@ -1068,12 +911,10 @@
       }
 
       function setupFormEventListeners() {
-        document
-          .getElementById("noticeForm")
-          .addEventListener("submit", async function (e) {
-            e.preventDefault();
-            await addNotice();
-          });
+        document.getElementById("noticeForm").addEventListener("submit", async function (e) {
+          e.preventDefault();
+          await addNotice();
+        });
       }
 
       async function addNotice() {
@@ -1127,58 +968,36 @@
       function saveLocalBackup() {
         try {
           const backupData = {
-            notices: notices.slice(0, 50), // 🔧 최대 50개만 저장하여 용량 제한
+            notices: notices.slice(0, 50),
             timestamp: new Date().toISOString(),
           };
 
-          // 기존 백업 삭제 후 새로 저장
           localStorage.removeItem("erNoticesBackup");
-
           const backupString = JSON.stringify(backupData);
 
-          // 용량 체크 (대략 5MB 제한)
           if (backupString.length > 5000000) {
-            console.warn(
-              "⚠️ 백업 데이터가 너무 큽니다. 최근 20개만 저장합니다."
-            );
+            console.warn("⚠️ 백업 데이터가 너무 큽니다. 최근 20개만 저장합니다.");
             backupData.notices = notices.slice(0, 20);
           }
 
           localStorage.setItem("erNoticesBackup", JSON.stringify(backupData));
-          console.log(
-            "💾 백업 저장 완료:",
-            backupData.notices.length + "개 공지사항"
-          );
+          console.log("💾 백업 저장 완료:", backupData.notices.length + "개 공지사항");
         } catch (error) {
           console.error("백업 저장 오류:", error);
 
-          // localStorage 정리 시도
           if (error.name === "QuotaExceededError") {
             try {
-              // 기존 백업 삭제
               localStorage.removeItem("erNoticesBackup");
-
-              // 최소한의 백업만 저장 (최근 10개)
               const minimalBackup = {
                 notices: notices.slice(0, 10),
                 timestamp: new Date().toISOString(),
               };
-              localStorage.setItem(
-                "erNoticesBackup",
-                JSON.stringify(minimalBackup)
-              );
-              console.log(
-                "💾 최소 백업 저장 완료:",
-                minimalBackup.notices.length + "개"
-              );
+              localStorage.setItem("erNoticesBackup", JSON.stringify(minimalBackup));
+              console.log("💾 최소 백업 저장 완료:", minimalBackup.notices.length + "개");
             } catch (secondError) {
               console.error("최소 백업도 실패:", secondError);
-              // localStorage 완전 정리
               localStorage.clear();
-              showMessage(
-                "info",
-                "저장 공간 부족으로 로컬 백업을 정리했습니다."
-              );
+              showMessage("info", "저장 공간 부족으로 로컬 백업을 정리했습니다.");
             }
           }
         }
@@ -1195,10 +1014,7 @@
             const backupAge = new Date() - new Date(backupData.timestamp);
             const hoursAgo = Math.floor(backupAge / (1000 * 60 * 60));
 
-            showMessage(
-              "error",
-              `오프라인 모드: ${notices.length}개 백업 데이터 사용 중 (${hoursAgo}시간 전 백업)`
-            );
+            showMessage("error", `오프라인 모드: ${notices.length}개 백업 데이터 사용 중 (${hoursAgo}시간 전 백업)`);
           } else {
             displayOfflineMessage();
           }
