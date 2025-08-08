@@ -801,11 +801,296 @@
         loadCustomDepartments();
 
         console.log("🔗 Google Apps Script URL:", GOOGLE_SCRIPT_URL);
-        loadNoticesFromGoogle();
+
+        // 🚀 캐싱 시스템: 즉시 로드 + 백그라운드 업데이트
+        loadCachedDataFirst(); // ← 이 라인으로 변경
 
         if (AUTO_REFRESH_INTERVAL > 0) {
           startAutoRefresh();
         }
+      }
+
+      // ==================== 캐싱 시스템 (신규 추가) ====================
+
+      /**
+       * 🚀 캐싱 시스템: 즉시 캐시 데이터 로드 + 백그라운드 업데이트
+       */
+      async function loadCachedDataFirst() {
+        console.log("📂 캐시된 데이터 우선 로드 시도");
+
+        // 1단계: 캐시된 데이터 즉시 표시
+        const cacheLoaded = loadFromCache();
+
+        if (cacheLoaded) {
+          showConnectionStatus(
+            "online",
+            `캐시 데이터 로드 - ${notices.length}개 공지사항`
+          );
+          displayNotices();
+          updateCacheIndicator(true); // 캐시 데이터 표시 중임을 알림
+          console.log("⚡ 캐시 데이터 즉시 표시 완료");
+        } else {
+          // 캐시가 없으면 로딩 메시지 표시
+          showConnectionStatus("loading", "최초 데이터 로드 중...");
+        }
+
+        // 2단계: 백그라운드에서 최신 데이터 확인
+        setTimeout(() => {
+          loadNoticesFromGoogleInBackground(cacheLoaded);
+        }, 100); // UI 블로킹 방지를 위한 짧은 지연
+      }
+
+      /**
+       * 캐시에서 데이터 로드
+       */
+      function loadFromCache() {
+        try {
+          const cached = localStorage.getItem("erNoticesCache");
+          if (!cached) {
+            console.log("📂 캐시 데이터 없음");
+            return false;
+          }
+
+          const cacheData = JSON.parse(cached);
+          const cacheAge = new Date() - new Date(cacheData.timestamp);
+          const hoursAgo = Math.floor(cacheAge / (1000 * 60 * 60));
+
+          // 캐시가 24시간 이상 오래된 경우 무시 (선택적)
+          if (hoursAgo > 24) {
+            console.log(`📂 캐시 데이터가 너무 오래됨 (${hoursAgo}시간 전)`);
+            localStorage.removeItem("erNoticesCache");
+            return false;
+          }
+
+          notices = cacheData.notices || [];
+
+          // 캐시된 사용자 정의 진료과도 복원
+          if (cacheData.customDepartments) {
+            customDepartments = new Set(cacheData.customDepartments);
+            updateCustomDepartmentButtons();
+          }
+
+          console.log(
+            `📂 캐시 로드 성공: ${notices.length}개 공지사항 (${hoursAgo}시간 전 데이터)`
+          );
+          return true;
+        } catch (error) {
+          console.error("📂 캐시 로드 오류:", error);
+          localStorage.removeItem("erNoticesCache");
+          return false;
+        }
+      }
+
+      /**
+       * 캐시에 데이터 저장
+       */
+      function saveToCache() {
+        try {
+          const cacheData = {
+            notices: notices,
+            customDepartments: [...customDepartments],
+            timestamp: new Date().toISOString(),
+            version: "1.0",
+          };
+
+          localStorage.setItem("erNoticesCache", JSON.stringify(cacheData));
+          console.log(`💾 캐시 저장 완료: ${notices.length}개 공지사항`);
+        } catch (error) {
+          console.error("💾 캐시 저장 오류:", error);
+
+          if (error.name === "QuotaExceededError") {
+            // 저장 공간 부족 시 기존 캐시 삭제 후 재시도
+            localStorage.removeItem("erNoticesCache");
+            localStorage.removeItem("erNoticesBackup");
+            try {
+              const minimalCache = {
+                notices: notices.slice(0, 50), // 최신 50개만 저장
+                customDepartments: [...customDepartments],
+                timestamp: new Date().toISOString(),
+                version: "1.0",
+              };
+              localStorage.setItem(
+                "erNoticesCache",
+                JSON.stringify(minimalCache)
+              );
+              console.log("💾 최소 캐시 저장 완료");
+            } catch (secondError) {
+              console.error("💾 최소 캐시도 저장 실패:", secondError);
+            }
+          }
+        }
+      }
+
+      /**
+       * 백그라운드에서 최신 데이터 로드
+       */
+      async function loadNoticesFromGoogleInBackground(hadCache) {
+        console.log("🔄 백그라운드 데이터 업데이트 시작");
+
+        try {
+          const previousCount = notices.length;
+          const previousData = [...notices]; // 이전 데이터 백업
+
+          // 기존 로딩 함수 호출 (UI 상태는 조용히 업데이트)
+          await loadNoticesFromGoogleSilent();
+
+          // 데이터 변경 확인
+          const hasChanges = checkForDataChanges(previousData, notices);
+
+          if (hasChanges) {
+            console.log("🔄 새로운 데이터 감지됨");
+            displayNotices();
+            updateCacheIndicator(false); // 최신 데이터로 업데이트됨
+
+            if (hadCache) {
+              // 사용자에게 업데이트 알림 (조용히)
+              showQuietUpdateNotification();
+            }
+          } else {
+            console.log("🔄 데이터 변경 없음");
+            updateCacheIndicator(false); // 최신 상태 확인됨
+          }
+
+          // 최신 데이터를 캐시에 저장
+          saveToCache();
+        } catch (error) {
+          console.error("🔄 백그라운드 업데이트 실패:", error);
+
+          if (hadCache) {
+            // 캐시가 있었다면 연결 상태만 업데이트
+            showConnectionStatus("offline", `오프라인 (캐시 데이터 사용 중)`);
+          } else {
+            // 캐시도 없었다면 기존 오류 처리
+            isOnline = false;
+            showConnectionStatus("offline", "연결 실패");
+            showMessage("error", `연결 실패: ${error.message}`);
+            loadLocalBackup();
+          }
+        }
+      }
+
+      /**
+       * 조용한 Google Sheets 데이터 로드 (UI 상태 업데이트 최소화)
+       */
+      async function loadNoticesFromGoogleSilent() {
+        const formData = new URLSearchParams();
+        formData.append("method", "GET");
+        formData.append("timestamp", Date.now().toString());
+
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), 15000);
+
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+          method: "POST",
+          body: formData,
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          signal: controller.signal,
+        });
+
+        clearTimeout(timeoutId);
+
+        if (!response.ok) {
+          throw new Error(
+            `HTTP 오류 ${response.status}: ${response.statusText}`
+          );
+        }
+
+        const responseText = await response.text();
+        const data = JSON.parse(responseText);
+
+        if (data.error) {
+          throw new Error(`서버 오류: ${data.error}`);
+        }
+
+        notices = data.notices || [];
+        isOnline = true;
+
+        // 사용자 정의 진료과 자동 감지
+        notices.forEach((notice) => {
+          if (
+            notice.department &&
+            ![
+              "GI",
+              "CV",
+              "Biliary",
+              "DR",
+              "NS",
+              "GS",
+              "PLM",
+              "OS",
+              "NPH",
+              "CS",
+              "URO",
+            ].includes(notice.department)
+          ) {
+            customDepartments.add(notice.department);
+          }
+        });
+
+        if (customDepartments.size > 0) {
+          saveCustomDepartments();
+          updateCustomDepartmentButtons();
+        }
+
+        showConnectionStatus("online", `연결됨 - ${notices.length}개 공지사항`);
+      }
+
+      /**
+       * 데이터 변경 여부 확인
+       */
+      function checkForDataChanges(oldData, newData) {
+        if (oldData.length !== newData.length) {
+          return true;
+        }
+
+        // 간단한 해시 비교로 변경 감지
+        const oldHash = JSON.stringify(
+          oldData.map((n) => ({
+            id: n.id,
+            content: n.content,
+            startDate: n.startDate,
+            endDate: n.endDate,
+          }))
+        );
+        const newHash = JSON.stringify(
+          newData.map((n) => ({
+            id: n.id,
+            content: n.content,
+            startDate: n.startDate,
+            endDate: n.endDate,
+          }))
+        );
+
+        return oldHash !== newHash;
+      }
+
+      /**
+       * 캐시 상태 표시 업데이트
+       */
+      function updateCacheIndicator(isCache) {
+        // 기존 연결 상태 메시지에 캐시 정보 추가하는 방식으로 구현
+        // 필요시 별도 UI 요소 추가 가능
+      }
+
+      /**
+       * 조용한 업데이트 알림
+       */
+      function showQuietUpdateNotification() {
+        // 너무 방해되지 않게 연결 상태로만 표시
+        const currentStatus = document.getElementById("connectionStatus");
+        const originalText = currentStatus.textContent;
+
+        currentStatus.textContent = "🔄 업데이트됨";
+        currentStatus.style.background = "var(--info)";
+
+        setTimeout(() => {
+          showConnectionStatus(
+            "online",
+            `연결됨 - ${notices.length}개 공지사항`
+          );
+        }, 2000);
       }
 
       // ==================== 구글 시트 통신 (향상된 오류 처리) ====================
@@ -1744,6 +2029,9 @@
         currentViewMode = "today";
         currentFilter = "all";
         updateViewButtons();
+
+        // 🚀 수동 새로고침: 강제로 서버에서 최신 데이터 가져오기
+        console.log("🔄 수동 새로고침 - 캐시 무시하고 최신 데이터 로드");
         loadNoticesFromGoogle();
       }
 
