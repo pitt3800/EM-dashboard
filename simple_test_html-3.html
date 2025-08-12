@@ -1,0 +1,650 @@
+<!DOCTYPE html>
+<html lang="ko">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>응급실 게시판 - 테스트</title>
+    <style>
+      body {
+        font-family: Arial, sans-serif;
+        margin: 20px;
+        background: #f5f5f5;
+      }
+      .container {
+        max-width: 800px;
+        margin: 0 auto;
+        background: white;
+        padding: 20px;
+        border-radius: 10px;
+        box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+      }
+      .status {
+        padding: 10px;
+        border-radius: 5px;
+        margin: 10px 0;
+        font-weight: bold;
+      }
+      .status.loading {
+        background: #fff3cd;
+        color: #856404;
+      }
+      .status.success {
+        background: #d1edff;
+        color: #0c5460;
+      }
+      .status.error {
+        background: #f8d7da;
+        color: #721c24;
+      }
+      button {
+        background: #007bff;
+        color: white;
+        padding: 10px 20px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        margin: 5px;
+      }
+      button:hover {
+        background: #0056b3;
+      }
+      .log {
+        background: #f8f9fa;
+        padding: 10px;
+        border-radius: 5px;
+        max-height: 300px;
+        overflow-y: auto;
+        font-family: monospace;
+        font-size: 12px;
+        white-space: pre-wrap;
+      }
+      input,
+      textarea,
+      select {
+        width: 100%;
+        padding: 8px;
+        margin: 5px 0;
+        border: 1px solid #ccc;
+        border-radius: 4px;
+      }
+      .form-group {
+        margin: 15px 0;
+      }
+      label {
+        display: block;
+        margin-bottom: 5px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <h1>🏥 응급실 게시판 시스템 (테스트)</h1>
+
+      <div id="status" class="status loading">시스템 시작 중...</div>
+
+      <div id="logs" class="log">시스템 로그:\n</div>
+
+      <hr />
+
+      <h3>📋 연결 테스트</h3>
+      <button onclick="testConnection()">Google Apps Script 연결 테스트</button>
+      <button onclick="loadData()">데이터 로드 테스트</button>
+      <button onclick="showDemo()">데모 데이터 표시</button>
+
+      <hr />
+
+      <h3>📝 새 공지사항 등록</h3>
+      <div class="form-group">
+        <label>진료과:</label>
+        <select id="department">
+          <option value="">선택하세요</option>
+          <option value="GI">GI</option>
+          <option value="CV">CV</option>
+          <option value="DR">DR</option>
+          <option value="NS">NS</option>
+        </select>
+      </div>
+
+      <div class="form-group">
+        <label>시작 날짜:</label>
+        <input type="date" id="startDate" />
+      </div>
+
+      <div class="form-group">
+        <label>내용:</label>
+        <textarea
+          id="content"
+          rows="4"
+          placeholder="공지사항 내용을 입력하세요"
+        ></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>작성자 (선택):</label>
+        <input type="text" id="author" placeholder="작성자명" />
+      </div>
+
+      <button onclick="submitNotice()">공지사항 등록</button>
+
+      <hr />
+
+      <h3>📋 공지사항 목록</h3>
+      <div id="noticesList">
+        <p>공지사항을 불러오는 중...</p>
+      </div>
+    </div>
+
+    <script>
+      // ==================== 설정 ====================
+      const GOOGLE_SCRIPT_URL =
+        "https://script.google.com/macros/s/AKfycbxgjbtH-vYofGpoCFteL5hiCZ2JKwkVE_ofAqwAvLClSP25CI0W-n-2J36lUMNVJABR/exec";
+
+      let notices = [];
+
+      // ==================== 로그 함수 ====================
+      function log(message) {
+        console.log(message);
+        const logDiv = document.getElementById("logs");
+        const timestamp = new Date().toLocaleTimeString();
+        logDiv.textContent += `[${timestamp}] ${message}\n`;
+        logDiv.scrollTop = logDiv.scrollHeight;
+      }
+
+      function setStatus(type, message) {
+        const statusDiv = document.getElementById("status");
+        statusDiv.className = `status ${type}`;
+        statusDiv.textContent = message;
+        log(`상태: ${message}`);
+      }
+
+      // ==================== 초기화 ====================
+      document.addEventListener("DOMContentLoaded", function () {
+        log("🏥 시스템 시작됨");
+
+        // 오늘 날짜 설정
+        const today = new Date().toISOString().split("T")[0];
+        document.getElementById("startDate").value = today;
+
+        setStatus("success", "시스템 준비 완료");
+        log("✅ 초기화 완료 - 연결 테스트 버튼을 클릭하세요");
+      });
+
+      // ==================== 연결 테스트 ====================
+      async function testConnection() {
+        log("🔍 Google Apps Script 연결 테스트 시작");
+        setStatus("loading", "연결 테스트 중...");
+
+        try {
+          log(`📡 요청 URL: ${GOOGLE_SCRIPT_URL}`);
+
+          const formData = new URLSearchParams();
+          formData.append("method", "GET");
+          formData.append("test", "connection");
+
+          const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            body: formData,
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          });
+
+          log(`📡 응답 상태: ${response.status} ${response.statusText}`);
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+
+          const responseText = await response.text();
+          log(`📄 응답 길이: ${responseText.length} 문자`);
+          log(`📄 응답 미리보기: ${responseText.substring(0, 200)}...`);
+
+          const data = JSON.parse(responseText);
+          log(`✅ JSON 파싱 성공`);
+          log(`📊 응답 데이터: ${JSON.stringify(data, null, 2)}`);
+
+          if (data.success || data.systemStatus) {
+            setStatus("success", "연결 성공!");
+            log("🎉 Google Apps Script 연결 성공");
+          } else {
+            throw new Error(data.error || "알 수 없는 오류");
+          }
+        } catch (error) {
+          log(`❌ 연결 실패: ${error.message}`);
+          setStatus("error", `연결 실패: ${error.message}`);
+        }
+      }
+
+      // ==================== 데이터 로드 ====================
+      async function loadData() {
+        log("📋 데이터 로드 시작");
+        setStatus("loading", "데이터 로드 중...");
+
+        try {
+          const formData = new URLSearchParams();
+          formData.append("method", "GET");
+
+          const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            body: formData,
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+
+          const data = await response.json();
+          log(`📊 받은 데이터: ${JSON.stringify(data, null, 2)}`);
+
+          if (data.notices) {
+            notices = data.notices;
+            displayNotices();
+            setStatus("success", `${notices.length}개 공지사항 로드됨`);
+          } else {
+            throw new Error(data.error || "데이터 형식 오류");
+          }
+        } catch (error) {
+          log(`❌ 데이터 로드 실패: ${error.message}`);
+          setStatus("error", `데이터 로드 실패: ${error.message}`);
+        }
+      }
+
+      // ==================== 데모 데이터 ====================
+      function showDemo() {
+        log("📝 데모 데이터 표시");
+
+        const today = new Date().toISOString().split("T")[0];
+        notices = [
+          {
+            id: "demo_1",
+            department: "GI",
+            startDate: today,
+            content: "데모 공지사항 1번입니다.\n시스템 테스트 중입니다.",
+            author: "테스트",
+            createdAt: new Date().toISOString(),
+          },
+          {
+            id: "demo_2",
+            department: "CV",
+            startDate: today,
+            content:
+              "데모 공지사항 2번입니다.\n편집 기능을 테스트할 수 있습니다.",
+            author: "시스템",
+            createdAt: new Date().toISOString(),
+          },
+        ];
+
+        displayNotices();
+        setStatus("success", "데모 데이터 표시됨");
+      }
+
+      // ==================== 공지사항 표시 ====================
+      function displayNotices() {
+        const container = document.getElementById("noticesList");
+
+        if (notices.length === 0) {
+          container.innerHTML = "<p>표시할 공지사항이 없습니다.</p>";
+          return;
+        }
+
+        let html = "";
+        notices.forEach((notice) => {
+          const date = new Date(notice.startDate).toLocaleDateString("ko-KR");
+          html += `
+                    <div style="border: 1px solid #ddd; padding: 15px; margin: 10px 0; border-radius: 5px; background: white;" data-id="${
+                      notice.id
+                    }">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+                            <span style="background: #007bff; color: white; padding: 4px 8px; border-radius: 4px; font-size: 12px;">
+                                ${notice.department}
+                            </span>
+                            <div>
+                                <span style="color: #666; font-size: 12px; margin-right: 10px;">${date}</span>
+                                <button onclick="editNotice('${
+                                  notice.id
+                                }')" style="background: #28a745; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 11px; margin-right: 5px;">
+                                    ✏️ 편집
+                                </button>
+                                <button onclick="deleteNotice('${
+                                  notice.id
+                                }')" style="background: #dc3545; color: white; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 11px;">
+                                    🗑️ 삭제
+                                </button>
+                            </div>
+                        </div>
+                        <div class="notice-content" style="white-space: pre-wrap; line-height: 1.4; cursor: pointer;" onclick="startEdit('${
+                          notice.id
+                        }')">
+                            ${notice.content}
+                        </div>
+                        ${
+                          notice.author
+                            ? `<div style="text-align: right; color: #888; font-size: 12px; margin-top: 10px;">작성자: ${notice.author}</div>`
+                            : ""
+                        }
+                    </div>
+                `;
+        });
+
+        container.innerHTML = html;
+        log(`📋 ${notices.length}개 공지사항 표시 완료`);
+      }
+
+      // ==================== 편집 기능 ====================
+      let editingNoticeId = null;
+      let originalContent = "";
+
+      function startEdit(noticeId) {
+        if (editingNoticeId) {
+          cancelEdit(); // 다른 편집 취소
+        }
+
+        const notice = notices.find((n) => n.id === noticeId);
+        if (!notice) return;
+
+        editingNoticeId = noticeId;
+        originalContent = notice.content;
+
+        const noticeDiv = document.querySelector(`[data-id="${noticeId}"]`);
+        const contentDiv = noticeDiv.querySelector(".notice-content");
+
+        // 편집 영역 생성
+        const editContainer = document.createElement("div");
+        editContainer.innerHTML = `
+                <textarea id="edit-textarea-${noticeId}" style="
+                    width: 100%; 
+                    min-height: 100px; 
+                    border: 2px solid #007bff; 
+                    border-radius: 4px; 
+                    padding: 8px; 
+                    font-family: inherit; 
+                    resize: vertical;
+                    background: #f8f9fa;
+                    margin-bottom: 10px;
+                ">${notice.content}</textarea>
+                <div style="text-align: right;">
+                    <button onclick="saveEdit('${noticeId}')" style="
+                        background: #28a745; 
+                        color: white; 
+                        border: none; 
+                        padding: 8px 16px; 
+                        border-radius: 4px; 
+                        cursor: pointer; 
+                        margin-right: 5px;
+                        font-weight: bold;
+                    ">💾 저장</button>
+                    <button onclick="cancelEdit()" style="
+                        background: #6c757d; 
+                        color: white; 
+                        border: none; 
+                        padding: 8px 16px; 
+                        border-radius: 4px; 
+                        cursor: pointer;
+                    ">❌ 취소</button>
+                </div>
+                <div style="font-size: 12px; color: #666; margin-top: 5px;">
+                    💡 팁: Shift+Enter로도 저장 가능, ESC로 취소
+                </div>
+            `;
+
+        // 내용 교체
+        contentDiv.parentNode.replaceChild(editContainer, contentDiv);
+
+        // 텍스트 영역에 포커스
+        const textarea = document.getElementById(`edit-textarea-${noticeId}`);
+        textarea.focus();
+        textarea.select();
+
+        // 키보드 이벤트
+        textarea.addEventListener("keydown", (e) => {
+          if (e.key === "Enter" && e.shiftKey) {
+            e.preventDefault();
+            saveEdit(noticeId);
+          } else if (e.key === "Escape") {
+            e.preventDefault();
+            cancelEdit();
+          }
+        });
+
+        // 편집 안내 메시지
+        setStatus("loading", "편집 중: 저장 버튼 클릭 또는 Shift+Enter로 저장");
+        log(`✏️ 편집 시작: ${noticeId}`);
+      }
+
+      function editNotice(noticeId) {
+        startEdit(noticeId);
+      }
+
+      async function saveEdit(noticeId) {
+        if (!editingNoticeId) {
+          log("❌ 편집 중인 공지사항이 없습니다.");
+          return;
+        }
+
+        const textarea = document.getElementById(`edit-textarea-${noticeId}`);
+        if (!textarea) {
+          log("❌ 편집 텍스트 영역을 찾을 수 없습니다.");
+          return;
+        }
+
+        const newContent = textarea.value.trim();
+
+        if (!newContent) {
+          alert("내용은 비워둘 수 없습니다.");
+          textarea.focus();
+          return;
+        }
+
+        if (newContent === originalContent) {
+          log("📝 내용 변경 없음, 편집 취소");
+          cancelEdit();
+          return;
+        }
+
+        log(`💾 편집 저장 시작: ${noticeId}`);
+        log(`📝 새 내용: "${newContent}"`);
+        setStatus("loading", "수정 내용 저장 중...");
+
+        try {
+          const formData = new URLSearchParams();
+          formData.append("method", "UPDATE");
+          formData.append("id", noticeId);
+          formData.append("content", newContent);
+
+          log(
+            `📡 UPDATE 요청 전송: ID=${noticeId}, Content=${newContent.substring(
+              0,
+              50
+            )}...`
+          );
+
+          const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            body: formData,
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          });
+
+          log(`📡 UPDATE 응답 상태: ${response.status} ${response.statusText}`);
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+          }
+
+          const responseText = await response.text();
+          log(`📄 UPDATE 응답 텍스트: ${responseText}`);
+
+          let result;
+          try {
+            result = JSON.parse(responseText);
+          } catch (parseError) {
+            log(`❌ JSON 파싱 실패: ${parseError.message}`);
+            throw new Error("서버 응답을 처리할 수 없습니다: " + responseText);
+          }
+
+          log(`📊 UPDATE 결과: ${JSON.stringify(result, null, 2)}`);
+
+          if (result.success) {
+            // 로컬 데이터도 업데이트
+            const notice = notices.find((n) => n.id === noticeId);
+            if (notice) {
+              notice.content = newContent;
+              log(`📝 로컬 데이터 업데이트 완료`);
+            }
+
+            setStatus("success", "공지사항이 수정되었습니다!");
+            log(`✅ 편집 저장 완료: ${noticeId}`);
+
+            // 편집 모드 종료
+            finishEdit();
+
+            // 화면 새로고침
+            displayNotices();
+
+            // 성공 메시지 표시
+            alert("공지사항이 성공적으로 수정되었습니다!");
+          } else {
+            throw new Error(result.error || result.message || "수정 실패");
+          }
+        } catch (error) {
+          log(`❌ 편집 저장 실패: ${error.message}`);
+          setStatus("error", `수정 실패: ${error.message}`);
+          alert(`수정 실패: ${error.message}`);
+
+          // 편집 모드는 유지하여 다시 시도할 수 있게 함
+        }
+      }
+
+      function cancelEdit() {
+        if (!editingNoticeId) return;
+
+        log(`❌ 편집 취소: ${editingNoticeId}`);
+        finishEdit();
+        displayNotices(); // 원래 상태로 복원
+      }
+
+      function finishEdit() {
+        editingNoticeId = null;
+        originalContent = "";
+        setStatus("success", "편집 완료");
+      }
+
+      // ==================== 삭제 기능 ====================
+      async function deleteNotice(noticeId) {
+        if (!confirm("이 공지사항을 삭제하시겠습니까?")) {
+          return;
+        }
+
+        log(`🗑️ 공지사항 삭제 시작: ${noticeId}`);
+        setStatus("loading", "삭제 중...");
+
+        try {
+          const formData = new URLSearchParams();
+          formData.append("method", "DELETE");
+          formData.append("id", noticeId);
+
+          const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            body: formData,
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+
+          const result = await response.json();
+          log(`📊 삭제 결과: ${JSON.stringify(result, null, 2)}`);
+
+          if (result.success) {
+            setStatus("success", "공지사항이 삭제되었습니다!");
+            log(`✅ 삭제 완료: ${noticeId}`);
+
+            // 데이터 다시 로드
+            setTimeout(loadData, 1000);
+          } else {
+            throw new Error(result.error || "삭제 실패");
+          }
+        } catch (error) {
+          log(`❌ 삭제 실패: ${error.message}`);
+          setStatus("error", `삭제 실패: ${error.message}`);
+        }
+      }
+
+      // ==================== 공지사항 등록 ====================
+      async function submitNotice() {
+        const department = document.getElementById("department").value;
+        const startDate = document.getElementById("startDate").value;
+        const content = document.getElementById("content").value.trim();
+        const author = document.getElementById("author").value.trim();
+
+        if (!department || !startDate || !content) {
+          alert("진료과, 시작날짜, 내용은 필수입니다.");
+          return;
+        }
+
+        log("📝 공지사항 등록 시작");
+        setStatus("loading", "공지사항 등록 중...");
+
+        try {
+          const formData = new URLSearchParams();
+          formData.append("method", "POST");
+          formData.append("department", department);
+          formData.append("startDate", startDate);
+          formData.append("content", content);
+          formData.append("author", author);
+
+          const response = await fetch(GOOGLE_SCRIPT_URL, {
+            method: "POST",
+            body: formData,
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+          });
+
+          if (!response.ok) {
+            throw new Error(`HTTP ${response.status}`);
+          }
+
+          const result = await response.json();
+          log(`📊 등록 결과: ${JSON.stringify(result, null, 2)}`);
+
+          if (result.success) {
+            setStatus("success", "공지사항 등록 성공!");
+
+            // 폼 초기화
+            document.getElementById("department").value = "";
+            document.getElementById("content").value = "";
+            document.getElementById("author").value = "";
+
+            // 데이터 다시 로드
+            setTimeout(loadData, 1000);
+          } else {
+            throw new Error(result.error || "등록 실패");
+          }
+        } catch (error) {
+          log(`❌ 등록 실패: ${error.message}`);
+          setStatus("error", `등록 실패: ${error.message}`);
+        }
+      }
+
+      // ==================== 전역 오류 처리 ====================
+      window.addEventListener("error", function (event) {
+        log(`💥 JavaScript 오류: ${event.error}`);
+        setStatus("error", "JavaScript 오류 발생");
+      });
+
+      window.addEventListener("unhandledrejection", function (event) {
+        log(`💥 Promise 오류: ${event.reason}`);
+        setStatus("error", "Promise 오류 발생");
+      });
+    </script>
+  </body>
+</html>
